@@ -6,6 +6,7 @@ import AmbientLight from "./threejs/lights/Ambient-Light";
 import useGLTFLoader from "./threejs/object-loaders/gltf-glb-hook";
 import { useCanvasContext } from "./threejs/canvas-utils/canvas-provider";
 import React from "react";
+import Toolbar from "./components/toolbar";
 const App = () => {
   const loader = useGLTFLoader();
   const { scene } = useCanvasContext()
@@ -16,6 +17,7 @@ const App = () => {
   }, [])
   return (
     <div>
+      <Toolbar/>
       <Canvas background="white">
         {/* <BoxGeometry /> */}
         <OrbitControls position={new Vector3(10, 10, 10)} />
