@@ -5,14 +5,14 @@ import AmbientLight from "./threejs/lights/Ambient-Light";
 
 import Toolbar from "./app/toolbar/toolbar";
 import ClippingTool from "./app/toolbar/clipping/clipping";
-import ClippingHelper from "./app/toolbar/clipping/clipping-helper";
 import { useToolbarStore } from "./app/toolbar/toolbar-store";
+import UtilityPanel from "./app/toolbar/quick-helper/quick-helper";
 const App = () => {
   const { setQuickOptions, showQuickOptions } = useToolbarStore()
 
   return (
     <div>
-      {showQuickOptions && <ClippingHelper />}
+      {showQuickOptions && <UtilityPanel />}
       <Toolbar />
       <Canvas background="white">
         {/* <BoxGeometry /> */}
