@@ -10,7 +10,7 @@ const Canvas = ({children,background}:CanvasType) => {
             className="mycanvas"
             ref={mountRef}
         >
-            {children}
+            {children as React.ReactNode}
         </div>
     );
 };

@@ -1,9 +1,9 @@
 import { useClippingStore } from './clipping-store'
 
 const ClippingHelper = () => {
-  const { setClippingPosition } = useClippingStore()
+  const  {setClippingPosition}= useClippingStore()
   return (
-    <div style={{ position: "absolute", display: 'flex', backgroundColor: "green" }}>
+    <div style={{ position: "absolute", display: 'flex' }}>
       Cliping Position
       <input
         type="range"
