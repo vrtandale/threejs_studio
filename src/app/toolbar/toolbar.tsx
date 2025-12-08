@@ -1,7 +1,7 @@
-import { useDialog } from '../providers/DialogProvider';
-import Settings from './settings';
+import { useDialog } from '../../providers/DialogProvider';
+import Settings from './settings/settings';
 import './toolbar.css'
-import UploadModal from './upload-modal';
+import UploadModal from './upload-modal/upload-modal';
 const Toolbar = () => {
     const {showDialog}=useDialog()
   return (

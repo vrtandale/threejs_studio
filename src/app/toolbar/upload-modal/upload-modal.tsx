@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import './uploadmodal.css'
-import useGLTFLoader from "../threejs/object-loaders/gltf-glb-hook";
-import { useCanvasContext } from "../threejs/canvas-utils/canvas-provider";
+import useGLTFLoader from "../../../threejs/object-loaders/gltf-glb-hook";
+import { useCanvasContext } from "../../../threejs/canvas-utils/canvas-provider";
 const UploadModal = () => {
     const fileRef = useRef<HTMLInputElement>(null);
     const [fileName, setFileName] = useState<string>("");
