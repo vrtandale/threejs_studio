@@ -4,7 +4,7 @@ import React from 'react';
 import { useClippingStore } from './clipping-store';
 
 const ClippingTool = () => {
-    const { clippingPosition } = useClippingStore();
+    const { clippingPosition,clipingOrientation } = useClippingStore();
     const clippingPlane = React.useMemo(() => new THREE.Plane(new THREE.Vector3(1, 0, 0), clippingPosition), []) // proper plane
     const { scene, renderer } = useCanvasContext();
     const helpers = React.useMemo(() => new THREE.Group(), []);
@@ -16,7 +16,7 @@ const ClippingTool = () => {
     
     React.useEffect(() => {
         helpers.add(new THREE.PlaneHelper(clippingPlane, Number(bounds?.max)*5, 0xff0000));
-    }, [bounds?.max,clippingPosition]);
+    }, [bounds?.max,clippingPosition,clipingOrientation]);
     // Compute bounding box only once when scene is ready
     React.useEffect(() => {
         //@ts-ignore
@@ -34,7 +34,7 @@ const ClippingTool = () => {
         // Convert percent → world position
         const worldPosition = bounds.min + (bounds.range * (clippingPosition / 100));
         clippingPlane.constant = -worldPosition;
-        clippingPlane.set(new THREE.Vector3(1, 0, 0), -worldPosition)
+        clippingPlane.set(clipingOrientation, -worldPosition)
         renderer.localClippingEnabled = true;
         scene.traverse((child: any) => {
             if (child.isMesh && clippingPlane) {
@@ -51,7 +51,7 @@ const ClippingTool = () => {
         return () => {
         };
 
-    }, [clippingPlane.constant, scene, clippingPosition]);
+    }, [clippingPlane.constant, scene, clippingPosition,clipingOrientation]);
 
     return null;
 };

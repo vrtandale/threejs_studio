@@ -13,3 +13,12 @@ body, html {
   background-color: aliceblue;
 }
 
+
+.btn{
+  margin: 5px;
+  padding: 10px;
+  background-color: rgba(145, 154, 255, 0.667);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
