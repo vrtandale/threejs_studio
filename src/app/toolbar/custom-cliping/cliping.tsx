@@ -6,22 +6,19 @@ import { useClippingStore } from '../clipping/clipping-store';
 const CustomClipping = () => {
     const { scene, renderer } = useCanvasContext()
     const { clipingOrientation,clippingPosition } = useClippingStore()
-
     const planeNormal = React.useMemo(() => new THREE.Vector3(1, 0, 0), []);
     const planePoint  = React.useMemo(() => new THREE.Vector3(0, 0, 0), []);
 
-    // 🔄 Update plane based on UI switch
     React.useEffect(() => {
         planeNormal.set(clipingOrientation.x,clipingOrientation.y,clipingOrientation.z);
         planePoint.copy(planeNormal).multiplyScalar(clippingPosition)
         planeNormal.normalize();
     }, [clipingOrientation,clippingPosition]);
 
-    // === APPLY CLIPPING TO ALL EXISTING MATERIALS ===
     React.useEffect(() => {
         renderer.localClippingEnabled = true;
 
-        scene.traverse(obj => {
+        scene.traverse((obj:any) => {
             if (!obj.isMesh) return;
 
             const material = obj.material;
@@ -29,7 +26,7 @@ const CustomClipping = () => {
 
             // Store original shader
             if (!material.userData._patched) {
-                material.onBeforeCompile = (shader) => {
+                material.onBeforeCompile = (shader:any) => {
 
                     shader.uniforms.planeNormal = { value: planeNormal };
                     shader.uniforms.planePoint  = { value: planePoint };
@@ -69,20 +66,6 @@ const CustomClipping = () => {
 
     }, [scene, planeNormal, planePoint,clipingOrientation]);
 
-
-
-    // Plane Visualizer
-    React.useEffect(() => {
-        const helper = new THREE.Mesh(
-            new THREE.PlaneGeometry(4, 4),
-            new THREE.MeshBasicMaterial({ color: 0x00aaff, transparent: true, opacity: 0.2 })
-        );
-
-        helper.rotation.y = Math.PI / 2;
-        scene.add(helper);
-
-        return () => scene.remove(helper);
-    }, [scene,clipingOrientation]);
 
     return null;
 };
