@@ -7,6 +7,7 @@ import Toolbar from "./app/toolbar/toolbar";
 import ClippingTool from "./app/toolbar/clipping/clipping";
 import { useToolbarStore } from "./app/toolbar/toolbar-store";
 import UtilityPanel from "./app/toolbar/quick-helper/quick-helper";
+import CustomClipping from "./app/toolbar/custom-cliping/cliping";
 const App = () => {
   const { showQuickOptions } = useToolbarStore()
 
@@ -17,7 +18,8 @@ const App = () => {
       <Canvas background="white">
         <OrbitControls position={new Vector3(10, 10, 10)} />
         <AmbientLight />
-        {showQuickOptions && <ClippingTool />}
+        <CustomClipping/>
+        {/* {showQuickOptions && <ClippingTool />} */}
       </Canvas>
 
     </div>
