@@ -102,10 +102,11 @@ const ModalEditor = () => {
     <div style={{ padding: 12 }}>
       <h3>Model Parts</h3>
 
-    <select>
+    <select >
         {meshes.map((m) => (
           <option
             key={m.id}
+            selected={m.id==selectedId}
             style={{
               cursor: 'pointer',
               fontWeight: selectedId === m.id ? 'bold' : 'normal',
