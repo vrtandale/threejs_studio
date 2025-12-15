@@ -1,5 +1,5 @@
 import ClippingHelper from "../clipping/clipping-helper"
-import { useClippingStore } from "../clipping/clipping-store"
+import ModalEditor from "../upload-modal/modal-editor"
 import "./utility-panel.css"
 
 const UtilityPanel = () => {
@@ -10,6 +10,7 @@ const UtilityPanel = () => {
             🛠 Utilities Panel
         </div>
         <ClippingHelper/>
+        <ModalEditor/>
     </div>
 
 
