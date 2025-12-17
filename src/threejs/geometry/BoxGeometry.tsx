@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { useCanvasContext } from "../canvas-utils/canvas-provider";
-import React from "react";
+import React, { type RefObject } from "react";
 
 
-const BoxGeometry = () => {
+const BoxGeometry = ({ref}:{ref:React.RefObject<THREE.Object3D<THREE.Object3DEventMap>|null >}) => {
     const { scene } = useCanvasContext();
 
     React.useEffect(() => {
@@ -12,6 +12,7 @@ const BoxGeometry = () => {
             new THREE.MeshBasicMaterial({ color: 0x00ff00 })
         );
         scene.add(cube);
+        ref.current=cube
         return () => {
             scene.remove(cube);
         };
