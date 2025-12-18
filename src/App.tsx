@@ -9,6 +9,7 @@ import { useToolbarStore } from "./app/toolbar/toolbar-store";
 import UtilityPanel from "./app/toolbar/quick-helper/quick-helper";
 import SeaShade from "./app/toolbar/shader/shader";
 import ColliderObject from "./app/toolbar/collission/collider";
+import BoxGeometry from "./threejs/geometry/BoxGeometry";
 const App = () => {
   const { showQuickOptions } = useToolbarStore()
 
@@ -19,6 +20,7 @@ const App = () => {
       <Canvas background="white">
         <OrbitControls position={new Vector3(10, 10, 10)} />
         <AmbientLight />
+        <BoxGeometry color="cyan" pos={new Vector3(2,2,2)}/>
         {/* <SeaShade/> */}
         {/* <CustomClipping/> */}
         {<ColliderObject/>}
