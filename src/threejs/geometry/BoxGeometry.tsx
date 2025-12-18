@@ -9,7 +9,7 @@ const BoxGeometry = ({ref,color="red",pos=new THREE.Vector3(1,1,1)}:{ref?:React.
     React.useEffect(() => {
         const cube = new THREE.Mesh(
             new THREE.BoxGeometry(pos.x,pos.y,pos.z),
-            new THREE.MeshBasicMaterial({ color: color })
+            new THREE.MeshBasicMaterial({ color: color ,transparent:true,opacity:0})
         );
         scene.add(cube);
         if(ref){

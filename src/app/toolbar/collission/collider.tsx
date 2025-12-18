@@ -6,61 +6,108 @@ import {
   Raycaster,
   Vector3,
   Mesh,
-  MeshStandardMaterial,
+  BufferGeometry,
+  Box3,
+  Points,
+  PointsMaterial,
 } from "three"
 import { TransformControls } from "three/addons/controls/TransformControls.js"
+import * as THREE from "three"
 
 const ColliderObject = () => {
   const { scene, camera, renderer } = useCanvasContext()
   const refBox = useRef<Object3D>(null)
+  const box3 = useRef(new Box3())
+  const pointsMeshRef = useRef<Points | null>(null)
 
-  const raycaster = useRef(new Raycaster())
-  const direction = useRef(new Vector3())
 
-  useEffect(() => {
-    let frameId: number
-
-    const checkCollision = () => {
-      if (!camera || !refBox.current) return
-
-      // ray direction from box
-      refBox.current.getWorldDirection(direction.current)
-      raycaster.current.set(refBox.current.position, direction.current)
-
-      const intersects = raycaster.current.intersectObjects(
-        scene.children,
-        true
-      )
-
-      // 🔹 reset all mesh colors
-
-      // 🔹 color hit objects
-      intersects.forEach(hit => {
-        const mesh = hit.object as Mesh
-        const mat = mesh.material as MeshStandardMaterial
-        mat.color.set("orange")
-      })
-
-      frameId = requestAnimationFrame(checkCollision)
-    }
-
-    checkCollision()
-    return () => cancelAnimationFrame(frameId)
-  }, [scene, camera])
-
-  useEffect(() => {
+  /* ---------------------------------------------
+   Collect intersecting geometry points
+  --------------------------------------------- */
+  const collectIntersectingPoints = () => {
     if (!refBox.current) return
 
-    const control = new TransformControls(camera, renderer.domElement)
-    control.attach(refBox.current)
-    scene.add(control.getHelper())
+    const boxMesh = refBox.current as Mesh
+    box3.current.setFromObject(boxMesh)
 
+    const intersectedPoints: Vector3[] = []
+
+    scene.traverse(obj => {
+      if (!(obj instanceof Mesh)) return
+      if (obj === boxMesh) return
+
+
+      // 🚫 Skip TransformControls gizmo meshes
+      if (obj.userData.isGizmo) return
+
+
+
+      const geometry = obj.geometry as BufferGeometry
+      const pos = geometry.attributes.position
+
+      for (let i = 0; i < pos.count; i++) {
+        const v = new Vector3().fromBufferAttribute(pos, i)
+        v.applyMatrix4(obj.matrixWorld)
+
+        if (box3.current.containsPoint(v)) {
+          intersectedPoints.push(v.clone())
+        }
+      }
+    })
+
+    renderPoints(intersectedPoints)
+  }
+
+  /* ---------------------------------------------
+   Render points
+  --------------------------------------------- */
+  const renderPoints = (points: Vector3[]) => {
+    if (pointsMeshRef.current) {
+      scene.remove(pointsMeshRef.current)
+      pointsMeshRef.current.geometry.dispose()
+    }
+
+    if (points.length === 0) return
+
+    const geometry = new BufferGeometry().setFromPoints(points)
+    const material = new PointsMaterial({
+      color: 0xff0000,
+      size: 0.5,
+    })
+
+    const pointsMesh = new Points(geometry, material)
+    pointsMeshRef.current = pointsMesh
+    console.log(pointsMesh)
+    scene.add(pointsMesh)
+    setTimeout(() => scene.remove(pointsMesh), 5000)
+  }
+
+  /* ---------------------------------------------
+   Transform Controls
+  --------------------------------------------- */
+  useEffect(() => {
+    if (!refBox.current || !camera || !renderer) return
+
+    const controls = new TransformControls(camera, renderer.domElement)
+    controls.attach(refBox.current)
+    controls.getHelper().traverse(obj => {
+ 
+    obj.userData.isGizmo = true
+  
+})
+    controls.getHelper().userData.isGizmo = true
+    controls.dragging = false
+    scene.add(controls.getHelper())
+
+    controls.addEventListener("objectChange", collectIntersectingPoints)
     return () => {
-      control.detach()
+      controls.removeEventListener("objectChange", collectIntersectingPoints)
+      controls.detach()
+      scene.remove(controls.getHelper())
     }
   }, [camera, renderer, scene])
 
-  return <BoxGeometry ref={refBox} color="orange"/>
+  return <BoxGeometry ref={refBox} color="orange" />
 }
 
 export default ColliderObject
