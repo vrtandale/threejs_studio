@@ -5,6 +5,7 @@ const OrbitControls = ({ position }: { position: Vector3 }) => {
     const { camera, renderer } = useCanvasContext();
     const controls = new ThreeOrbitControls(camera, renderer.domElement);
     camera.position.set(position.x, position.y, position.z);
+    controls.enableRotate=false
     controls.update();
     return (<></>);
 }

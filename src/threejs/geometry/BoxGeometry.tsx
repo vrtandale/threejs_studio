@@ -11,6 +11,7 @@ const BoxGeometry = ({ref}:{ref:React.RefObject<THREE.Object3D<THREE.Object3DEve
             new THREE.BoxGeometry(Math.random() * 10, Math.random() * 10, 1),
             new THREE.MeshBasicMaterial({ color: 0x00ff00 })
         );
+        cube.name='vBox'
         scene.add(cube);
         ref.current=cube
         return () => {

@@ -19,7 +19,7 @@ const App = () => {
       <Canvas background="white">
         <OrbitControls position={new Vector3(10, 10, 10)} />
         <AmbientLight />
-        <SeaShade/>
+        {/* <SeaShade/> */}
         {/* <CustomClipping/> */}
         {<ColliderObject/>}
         {showQuickOptions && <ClippingTool />}
