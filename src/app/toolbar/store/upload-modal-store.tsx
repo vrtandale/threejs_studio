@@ -2,8 +2,8 @@ import { Object3D } from 'three'
 import { create } from 'zustand'
 
 type UploadModalStore = {
-  object3d: Object3D|null
-  setObject3d: (obj: Object3D) => void
+  object3d: Object3D[]|null
+  setObject3d: (obj: Object3D[]) => void
 }
 export const useModalStore = create<UploadModalStore>((set) => ({
     object3d:null,

@@ -1,6 +1,6 @@
 import { useDialog } from '../../providers/DialogProvider';
 import Settings from './settings/settings';
-import { useToolbarStore } from './toolbar-store';
+import { useToolbarStore } from './store/toolbar-store';
 import './toolbar.css'
 import UploadModal from './upload-modal/upload-modal';
 const Toolbar = () => {

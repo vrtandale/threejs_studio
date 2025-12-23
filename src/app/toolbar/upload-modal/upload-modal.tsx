@@ -3,14 +3,14 @@ import './uploadmodal.css'
 import useGLTFLoader from "../../../threejs/object-loaders/gltf-glb-hook";
 import { useCanvasContext } from "../../../threejs/canvas-utils/canvas-provider";
 import * as THREE from 'three'
-import { useModalStore } from "./upload-modal-store";
+import { useModalStore } from "../store/upload-modal-store";
 const UploadModal = () => {
     const fileRef = useRef<HTMLInputElement>(null);
     const [fileName, setFileName] = useState<string>("");
     const [fileUrl, setFileUrl] = useState<string>("");
     const loader = useGLTFLoader();
     const { scene } = useCanvasContext()
-    const {setObject3d}=useModalStore()
+    const {setObject3d,object3d}=useModalStore()
     const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -26,7 +26,7 @@ const UploadModal = () => {
         setFileUrl(url);
         loader(url).then((gltf) => {
             scene.add(gltf.scene);
-            setObject3d(gltf.scene)
+            object3d?setObject3d([...object3d,gltf.scene]):setObject3d([gltf.scene])
         })
         console.log("Blob URL:", url);
     };
