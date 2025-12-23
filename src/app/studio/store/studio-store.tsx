@@ -4,8 +4,14 @@ import { create } from 'zustand'
 type studioStore = {
     controllerMovement:TransformControlsMode|null,
     setControllerMovement:(obj:TransformControlsMode|null)=>void
+
+    singleGeometryRaycast:boolean,
+    setSingleGeometryRaycast:(act:boolean)=>void
 }
 export const useStudioStore = create<studioStore>((set) => ({
   controllerMovement:null,
   setControllerMovement: (controllerMovement) => set({ controllerMovement: controllerMovement }),
+
+  setSingleGeometryRaycast:(act)=>set({singleGeometryRaycast:act}),
+  singleGeometryRaycast:false
 }))

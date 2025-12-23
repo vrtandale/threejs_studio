@@ -11,7 +11,7 @@ export const useRayCasterController = () => {
   const mouse = useRef(new THREE.Vector2())
   const { object3d } = useModalStore()
   const { attach } = useTransformController()
-  
+  const {singleGeometryRaycast}=useStudioStore()
   useEffect(() => {
     if (!renderer || !camera || !scene) return
 
@@ -30,7 +30,7 @@ export const useRayCasterController = () => {
 
 
       if (intersects.length > 0) {
-        const mesh = getSelectableRoot(intersects[0].object)
+        const mesh = singleGeometryRaycast?intersects[0].object:getSelectableRoot(intersects[0].object)
         attach(mesh)          // 🔥 auto removes previous controller
       }
     }
@@ -39,7 +39,7 @@ export const useRayCasterController = () => {
     return () => {
       renderer.domElement.removeEventListener("pointerdown", handleClick)
     }
-  }, [renderer, camera, scene, object3d, attach])
+  }, [renderer, camera, scene, object3d, attach,singleGeometryRaycast])
 }
 
 

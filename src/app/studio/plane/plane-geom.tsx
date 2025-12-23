@@ -8,7 +8,7 @@ const PlaneGeometry = () => {
   React.useEffect(() => {
     const geometry = new THREE.PlaneGeometry(100, 100, 100, 100)
     const material = new THREE.MeshBasicMaterial({
-      color: "blue",
+      color: "grey",
       side: THREE.DoubleSide,
       wireframe: true,
     })
