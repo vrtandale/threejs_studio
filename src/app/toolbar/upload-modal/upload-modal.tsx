@@ -25,6 +25,7 @@ const UploadModal = () => {
         const url = URL.createObjectURL(file);
         setFileUrl(url);
         loader(url).then((gltf) => {
+            gltf.scene.userData.isRootModel = true
             scene.add(gltf.scene);
             object3d?setObject3d([...object3d,gltf.scene]):setObject3d([gltf.scene])
         })

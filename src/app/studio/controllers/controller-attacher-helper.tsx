@@ -1,15 +1,10 @@
 import React from 'react'
 import { useModalStore } from '../../toolbar/store/upload-modal-store'
 import useAddTranslationController from './dyanmic-controller-translation'
+import { useRayCaster } from '../raycaster/raycaster-hook'
 
 const ControllerAttacher = () => {
-    const {object3d}=useModalStore()
-    const attacher=useAddTranslationController()
-    React.useEffect(()=>{
-        object3d?.forEach((x)=>{
-            attacher(x)
-        })
-    },[object3d])
+  useRayCaster()
   return null
 }
 

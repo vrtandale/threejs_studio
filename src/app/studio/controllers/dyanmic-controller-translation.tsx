@@ -3,31 +3,43 @@ import * as THREE from "three"
 import { useCanvasContext } from "../../../threejs/canvas-utils/canvas-provider"
 import { TransformControls } from "three/examples/jsm/Addons.js"
 
-const useAddTranslationController = () => {
-  const { scene, renderer, camera } = useCanvasContext()
+const useTransformController = () => {
+  const { scene, camera, renderer } = useCanvasContext()
 
-  return React.useCallback(
-    (object: THREE.Object3D) => {
-      const controls = new TransformControls(camera, renderer.domElement)
+  const controlsRef = React.useRef<TransformControls | null>(null)
 
-      controls.attach(object)
-      controls.setMode("translate") // translate | rotate | scale
+  React.useEffect(() => {
+    if (!camera || !renderer || !scene) return
 
-      // mark gizmo for raycast filtering
-      controls.getHelper().traverse((obj:THREE.Object3D) => {
-        obj.userData.isGizmo = true
-      })
+    const controls = new TransformControls(camera, renderer.domElement)
+    controls.setMode("translate")
 
-      scene.add(controls.getHelper())
+    // mark gizmo for raycast filtering
+    controls.getHelper().traverse((obj:THREE.Object3D) => {
+      obj.userData.isGizmo = true
+    })
 
-      return () => {
-        controls.detach()
-        scene.remove(controls.getHelper())
-        controls.dispose()
-      }
-    },
-    [scene, camera, renderer]
-  )
+    scene.add(controls.getHelper())
+    controlsRef.current = controls
+
+    return () => {
+      controls.dispose()
+      scene.remove(controls.getHelper())
+      controlsRef.current = null
+    }
+  }, [scene, camera, renderer])
+
+  /** attach to new object (auto-removes previous) */
+  const attach = React.useCallback((object: THREE.Object3D) => {
+    controlsRef.current?.attach(object)
+  }, [])
+
+  /** completely hide controller */
+  const detach = React.useCallback(() => {
+    controlsRef.current?.detach()
+  }, [])
+
+  return { attach, detach }
 }
 
-export default useAddTranslationController
+export default useTransformController

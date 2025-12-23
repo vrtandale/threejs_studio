@@ -12,7 +12,7 @@ type MeshItem = {
 
 const ModalEditor = () => {
   const { object3d } = useModalStore();
-    const {camera,renderer,scene}=useCanvasContext()
+  const { camera, renderer, scene } = useCanvasContext()
   const [meshes, setMeshes] = useState<MeshItem[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [color, setColor] = useState('#ffffff');
@@ -28,22 +28,24 @@ const ModalEditor = () => {
 
     const list: MeshItem[] = [];
 
-    object3d.traverse((child) => {
-      if ((child as THREE.Mesh).isMesh) {
-        const mesh = child as THREE.Mesh;
-        const material = mesh.material as THREE.MeshStandardMaterial;
+    object3d.map(x => {
+      x.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          const material = mesh.material as THREE.MeshStandardMaterial;
 
-        if (material?.isMeshStandardMaterial) {
-          list.push({
-            id: mesh.uuid,
-            name: mesh.name || mesh.uuid.slice(0, 8),
-            mesh,
-            material,
-          });
+          if (material?.isMeshStandardMaterial) {
+            list.push({
+              id: mesh.uuid,
+              name: mesh.name || mesh.uuid.slice(0, 8),
+              mesh,
+              material,
+            });
+          }
         }
-      }
-    });
+      });
 
+    })
     setMeshes(list);
   }, [object3d]);
 
@@ -102,11 +104,11 @@ const ModalEditor = () => {
     <div style={{ padding: 12 }}>
       <h3>Model Parts</h3>
 
-    <select >
+      <select >
         {meshes.map((m) => (
           <option
             key={m.id}
-            selected={m.id==selectedId}
+            selected={m.id == selectedId}
             style={{
               cursor: 'pointer',
               fontWeight: selectedId === m.id ? 'bold' : 'normal',
@@ -119,7 +121,7 @@ const ModalEditor = () => {
             {m.name}
           </option>
         ))}
-</select>
+      </select>
       {/* Color Picker */}
       <input
         type="color"
