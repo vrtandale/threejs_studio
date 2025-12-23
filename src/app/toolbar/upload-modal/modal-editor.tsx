@@ -101,8 +101,10 @@ const ModalEditor = () => {
   }, [color, selectedId, meshes]);
 
   return (
-    <div style={{ padding: 12 }}>
-      <h3>Model Parts</h3>
+    <div >
+      <div className="utility-title">
+        Modal Color Editor
+      </div>
 
       <select >
         {meshes.map((m) => (

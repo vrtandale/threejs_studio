@@ -3,12 +3,12 @@ import * as THREE from "three"
 import { useCanvasContext } from "../../../threejs/canvas-utils/canvas-provider"
 import { useModalStore } from "../../toolbar/store/upload-modal-store"
 import useTransformController from "../controllers/dyanmic-controller-translation"
+import { useStudioStore } from "../store/studio-store"
 
-export const useRayCaster = () => {
+export const useRayCasterController = () => {
   const { renderer, camera, scene } = useCanvasContext()
   const raycaster = useRef(new THREE.Raycaster())
   const mouse = useRef(new THREE.Vector2())
-
   const { object3d } = useModalStore()
   const { attach } = useTransformController()
 

@@ -6,10 +6,8 @@ import Toolbar from "./app/toolbar/toolbar";
 import ClippingTool from "./app/toolbar/clipping/clipping";
 import { useToolbarStore } from "./app/toolbar/store/toolbar-store";
 import UtilityPanel from "./app/toolbar/quick-helper/quick-helper";
-import ColliderObject from "./app/toolbar/collission/collider";
-import SeaShade from "./app/toolbar/shader/shader";
 import PlaneGeometry from "./app/studio/plane/plane-geom";
-import ControllerAttacher from "./app/studio/controllers/controller-attacher-helper";
+import { useRayCasterController } from "./app/studio/raycaster/raycaster-hook";
 
 //threejs 3d enviorment studio
 // add a plane as default with x,y,z size that can be dyanmic
@@ -18,7 +16,7 @@ import ControllerAttacher from "./app/studio/controllers/controller-attacher-hel
 // attach a player charecterizations
 const App = () => {
   const { showQuickOptions } = useToolbarStore()
-
+  useRayCasterController()
   return (
     <div>
       {showQuickOptions && <UtilityPanel />}
@@ -31,7 +29,6 @@ const App = () => {
         {/* <SeaShade/> */}
         {/* <CustomClipping/> */}
         {/* <ColliderObject/> */}
-        <ControllerAttacher/>
         {showQuickOptions && <ClippingTool />}
       </Canvas>
 

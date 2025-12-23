@@ -1,11 +1,11 @@
-import type { Object3D } from 'three'
+import type { TransformControlsMode } from 'three/examples/jsm/Addons.js'
 import { create } from 'zustand'
 
 type studioStore = {
-    selectedModalsToAddController:Object3D[],
-    setSelectedModalsToAddController:(obj:Object3D[])=>void
+    controllerMovement:TransformControlsMode|null,
+    setControllerMovement:(obj:TransformControlsMode|null)=>void
 }
 export const useStudioStore = create<studioStore>((set) => ({
-  selectedModalsToAddController: [],
-  setSelectedModalsToAddController: (selectedModalsToAddController: Object3D[]) => set({ selectedModalsToAddController: selectedModalsToAddController }),
+  controllerMovement:null,
+  setControllerMovement: (controllerMovement) => set({ controllerMovement: controllerMovement }),
 }))

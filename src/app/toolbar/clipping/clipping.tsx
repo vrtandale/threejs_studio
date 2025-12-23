@@ -16,6 +16,9 @@ const ClippingTool = () => {
     
     React.useEffect(() => {
         helpers.add(new THREE.PlaneHelper(clippingPlane, Number(bounds?.max)*5, 0xff0000));
+        return () => {
+            scene.remove(helpers);
+        };
     }, [bounds?.max,clippingPosition,clipingOrientation]);
     // Compute bounding box only once when scene is ready
     React.useEffect(() => {
@@ -49,6 +52,7 @@ const ClippingTool = () => {
             }
         });
         return () => {
+            scene.remove(helpers);
         };
 
     }, [clippingPlane.constant, scene, clippingPosition,clipingOrientation]);

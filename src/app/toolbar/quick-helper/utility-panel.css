@@ -7,14 +7,14 @@ width: 260px;
 padding: 20px 22px;
 border-radius: 20px;
 
-background: rgba(44, 44, 44, 0.228);
+background: rgba(182, 182, 182, 0.297);
 backdrop-filter: blur(14px) saturate(190%);
 -webkit-backdrop-filter: blur(14px) saturate(190%);
 
 border: 1px solid rgba(255, 255, 255, 0.25);
 box-shadow: 0 12px 35px rgba(0, 0, 0, 0.28);
 
-color: rgb(84, 84, 84);
+color: rgb(178, 178, 178);
 font-family: "Inter", sans-serif;
 }
 
@@ -24,7 +24,7 @@ font-size: 16px;
 font-weight: 700;
 margin-bottom: 14px;
 letter-spacing: 0.5px;
-text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+text-shadow: 0 2px 4px rgba(255, 255, 255, 0.257);
 }
 
 /* Sections */

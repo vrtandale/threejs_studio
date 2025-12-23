@@ -14,7 +14,7 @@ const ClippingHelper = () => {
 
     return (
         <div>
-            <div className="utility-section">
+          
                 <div className="section-title">✂️ Clipping Position</div>
 
                 <input
@@ -28,7 +28,7 @@ const ClippingHelper = () => {
                 <button className='btn' onClick={rotateAxis}>
                     (Current: {axis})
                 </button>
-            </div>
+          
         </div>
     );
 };
