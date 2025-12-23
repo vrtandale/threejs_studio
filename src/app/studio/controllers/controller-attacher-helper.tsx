@@ -31,31 +31,31 @@ const ControllerAttacher = () => {
 
   return (
     <>
-    <div className="utility-title">
-                🛠 Modal Controller
-            </div>
-    <div style={{display:'grid',gap:4}}>
-      <Button
-        label="Move"
-        active={controllerMovement === "translate"}
-        onClick={() => setControllerMovement("translate")}
-      />
-      <Button
-        label="Rotate"
-        active={controllerMovement === "rotate"}
-        onClick={() => setControllerMovement("rotate")}
-      />
-      <Button
-        label="Scale"
-        active={controllerMovement === "scale"}
-        onClick={() => setControllerMovement("scale")}
-      />
-      <Button
-        label="None"
-        active={controllerMovement === "none"}
-        onClick={() => setControllerMovement("none")}
-      />
-    </div>
+      <div className="utility-title">
+        🛠 Modal Controller
+      </div>
+      <div style={{ display: 'grid', gap: 4 }}>
+        <Button
+          label="Move"
+          active={controllerMovement === "translate"}
+          onClick={() => setControllerMovement("translate")}
+        />
+        <Button
+          label="Rotate"
+          active={controllerMovement === "rotate"}
+          onClick={() => setControllerMovement("rotate")}
+        />
+        <Button
+          label="Scale"
+          active={controllerMovement === "scale"}
+          onClick={() => setControllerMovement("scale")}
+        />
+        <Button
+          label="None"
+          active={controllerMovement === null}
+          onClick={() => setControllerMovement(null)}
+        />
+      </div>
     </>
   )
 }

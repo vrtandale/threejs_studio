@@ -11,10 +11,10 @@ const { controllerMovement, setControllerMovement } = useStudioStore()
   const controlsRef = React.useRef<TransformControls | null>(null)
 
   React.useEffect(() => {
-    if (!camera || !renderer || !scene) return
+    if (!camera || !renderer || !scene ||!controllerMovement) return
 
     const controls = new TransformControls(camera, renderer.domElement)
-    controllerMovement&&controls.setMode(controllerMovement)
+   controls.setMode(controllerMovement)
 
     // mark gizmo for raycast filtering
     controls.getHelper().traverse((obj:THREE.Object3D) => {

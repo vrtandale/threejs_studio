@@ -11,7 +11,7 @@ export const useRayCasterController = () => {
   const mouse = useRef(new THREE.Vector2())
   const { object3d } = useModalStore()
   const { attach } = useTransformController()
-
+  
   useEffect(() => {
     if (!renderer || !camera || !scene) return
 
