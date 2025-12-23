@@ -3,7 +3,6 @@ import { useCanvasContext } from "../../../threejs/canvas-utils/canvas-provider"
 import BoxGeometry from "../../../threejs/geometry/BoxGeometry"
 import {
   Object3D,
-  Raycaster,
   Vector3,
   Mesh,
   BufferGeometry,
@@ -12,7 +11,6 @@ import {
   PointsMaterial,
 } from "three"
 import { TransformControls } from "three/addons/controls/TransformControls.js"
-import * as THREE from "three"
 
 const ColliderObject = () => {
   const { scene, camera, renderer } = useCanvasContext()
@@ -54,7 +52,7 @@ const ColliderObject = () => {
         }
       }
     })
-
+    console.log(intersectedPoints)
     renderPoints(intersectedPoints)
   }
 
@@ -72,7 +70,7 @@ const ColliderObject = () => {
     const geometry = new BufferGeometry().setFromPoints(points)
     const material = new PointsMaterial({
       color: 0xff0000,
-      size: 0.5,
+      size: 0.05,
     })
 
     const pointsMesh = new Points(geometry, material)
@@ -91,10 +89,8 @@ const ColliderObject = () => {
     const controls = new TransformControls(camera, renderer.domElement)
     controls.attach(refBox.current)
     controls.getHelper().traverse(obj => {
- 
     obj.userData.isGizmo = true
-  
-})
+    })
     controls.getHelper().userData.isGizmo = true
     controls.dragging = false
     scene.add(controls.getHelper())
