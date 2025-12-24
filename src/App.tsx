@@ -8,6 +8,7 @@ import UtilityPanel from "./app/toolbar/quick-helper/quick-helper";
 import PlaneGeometry from "./app/studio/plane/plane-geom";
 import { useRayCasterController } from "./app/studio/raycaster/raycaster-hook";
 import OrbitControls from "./threejs/controls/orbit-controls";
+import useFirstPersonMovement from "./app/studio/camera-view/first-person";
 
 //threejs 3d enviorment studio
 // add a plane as default with x,y,z size that can be dyanmic
@@ -17,6 +18,7 @@ import OrbitControls from "./threejs/controls/orbit-controls";
 const App = () => {
   const { showQuickOptions } = useToolbarStore()
   useRayCasterController()
+  useFirstPersonMovement()
   return (
     <div>
       {showQuickOptions && <UtilityPanel />}
