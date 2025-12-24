@@ -24,7 +24,7 @@ const App = () => {
       {showQuickOptions && <UtilityPanel />}
       <Toolbar />
       <Canvas background="black">
-        <OrbitControls position={new Vector3(10, 10, 10)} />
+        <OrbitControls />
         <AmbientLight />
         <PlaneGeometry/>
         {/* <BoxGeometry color="cyan" pos={new Vector3(2,2,2)}/> */}

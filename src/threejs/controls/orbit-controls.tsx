@@ -4,20 +4,19 @@ import type { Vector3 } from "three"
 import { useStudioStore } from "../../app/studio/store/studio-store"
 import React from "react"
 
-const OrbitControls = ({ position }: { position: Vector3 }) => {
+const OrbitControls = () => {
   const { camera, renderer } = useCanvasContext()
   const { controllerMovement } = useStudioStore()
-
+  const {cameraMode} = useStudioStore()
   const controlsRef = React.useRef<ThreeOrbitControls | null>(null)
 
   // create ONCE
   React.useEffect(() => {
-    if (!camera || !renderer) return
-
+    if (!camera || !renderer || cameraMode !== "orbit") return console.log("no camera or renderer")
+    
     const controls = new ThreeOrbitControls(camera, renderer.domElement)
-    camera.position.set(position.x, position.y, position.z)
+    camera.position.set(10, 10, 10)
 
-    controls.enableDamping = true
     controls.update()
 
     controlsRef.current = controls
@@ -26,7 +25,7 @@ const OrbitControls = ({ position }: { position: Vector3 }) => {
       controls.dispose()
       controlsRef.current = null
     }
-  }, [camera, renderer, position])
+  }, [camera, renderer,cameraMode])
 
   // react to controller movement
   React.useEffect(() => {

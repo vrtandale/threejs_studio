@@ -1,6 +1,6 @@
 import { useStudioStore } from "../store/studio-store"
 
-const Button = ({
+export const Button = ({
   label,
   active,
   onClick,

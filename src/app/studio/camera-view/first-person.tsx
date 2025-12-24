@@ -2,6 +2,7 @@ import React from 'react'
 import * as THREE from 'three'
 import { useCanvasContext } from '../../../threejs/canvas-utils/canvas-provider'
 import useKeyboardControls from '../keyboard-controls/keyboard-controls'
+import { useStudioStore } from '../store/studio-store'
 
 const useFirstPersonCamera = (
   moveSpeed: number = 0.1,
@@ -9,12 +10,12 @@ const useFirstPersonCamera = (
 ) => {
   const { scene, camera } = useCanvasContext()
   const keys = useKeyboardControls()
-
   const playerRef = React.useRef<THREE.Object3D | null>(null)
+  const { cameraMode, setCameraMode } = useStudioStore()
 
   /* -------------------- Create Player Controller -------------------- */
   React.useEffect(() => {
-    if (!scene || !camera) return
+    if (!scene || !camera || cameraMode !== "first-person") return
 
     // Player root object
     const player = new THREE.Object3D()
@@ -31,7 +32,7 @@ const useFirstPersonCamera = (
     player.add(body)
 
     // Camera setup
-    camera.position.set(0, 1.6, 0)
+    // camera.position.set(10, 10, 10)
     player.add(camera)
 
     return () => {
@@ -39,11 +40,11 @@ const useFirstPersonCamera = (
       body.geometry.dispose()
       body.material.dispose()
     }
-  }, [scene, camera])
+  }, [scene, camera,cameraMode])
 
   /* -------------------- Movement & Rotation -------------------- */
   React.useEffect(() => {
-    if (!camera || !playerRef.current) return
+    if (!camera || !playerRef.current||cameraMode !== "first-person") return
 
     const player = playerRef.current
     const direction = new THREE.Vector3()
@@ -64,7 +65,12 @@ const useFirstPersonCamera = (
       if (keys.current['KeyW']) direction.z -= 1
       if (keys.current['KeyS']) direction.z += 1
 
-      if (direction.lengthSq() > 0) {
+      if (keys.current['Space']) direction.y =  1
+      if (keys.current['ShiftRight']) {
+        direction.y =  - 1
+      }
+    if (!keys.current['Space'])  player.position.setY(0)
+      if (direction) {
         direction.normalize()
         direction.applyAxisAngle(
           new THREE.Vector3(0, 1, 0),
@@ -77,7 +83,7 @@ const useFirstPersonCamera = (
     }
 
     update()
-  }, [camera, keys, moveSpeed, rotationSpeed])
+  }, [camera, keys, moveSpeed, rotationSpeed,cameraMode])
 
   return null
 }

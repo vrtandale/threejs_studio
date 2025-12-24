@@ -7,11 +7,17 @@ type studioStore = {
 
     singleGeometryRaycast:boolean,
     setSingleGeometryRaycast:(act:boolean)=>void
+
+    cameraMode:"orbit"|"first-person",
+    setCameraMode:(mode:"orbit"|"first-person")=>void
 }
 export const useStudioStore = create<studioStore>((set) => ({
   controllerMovement:null,
   setControllerMovement: (controllerMovement) => set({ controllerMovement: controllerMovement }),
 
   setSingleGeometryRaycast:(act)=>set({singleGeometryRaycast:act}),
-  singleGeometryRaycast:false
+  singleGeometryRaycast:false,
+
+  cameraMode:"orbit",
+  setCameraMode:(mode)=>set({cameraMode:mode})
 }))
