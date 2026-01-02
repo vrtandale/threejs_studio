@@ -9,7 +9,7 @@ const {object3d,setObject3d} = useModalStore()
     const geometry = new THREE.BoxGeometry(1, 1, 1)
     const material = new THREE.MeshStandardMaterial({ color: 'red' })
     const cube = new THREE.Mesh(geometry, material)
-
+   
     cube.position.set(0, 0, 0)
     scene.add(cube)
     object3d?setObject3d([...object3d,cube]):setObject3d([cube])
