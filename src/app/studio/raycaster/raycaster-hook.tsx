@@ -27,7 +27,7 @@ export const useRayCasterController = () => {
         object3d ?? [],
         true
       ).filter(i => !i.object.userData.isGizmo)
-
+      console.log('Intersects:', intersects)
 
       if (intersects.length > 0) {
         const mesh = singleGeometryRaycast?intersects[0].object:getSelectableRoot(intersects[0].object)
