@@ -23,7 +23,7 @@ const SeaShade = () => {
         uniform float time;
         varying vec2 vUv;
 
-        void main() {
+        void main() { 
           vUv = uv;
           vec3 pos = position;
 
