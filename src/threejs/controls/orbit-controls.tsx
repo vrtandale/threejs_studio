@@ -16,7 +16,6 @@ const OrbitControls = () => {
     
     const controls = new ThreeOrbitControls(camera, renderer.domElement)
     camera.position.set(10, 10, 10)
-
     controls.update()
 
     controlsRef.current = controls
@@ -32,7 +31,8 @@ const OrbitControls = () => {
     if (!controlsRef.current) return
 
     controlsRef.current.enableRotate = controllerMovement === null
-  }, [controllerMovement])
+    controlsRef.current.update()
+  }, [controllerMovement, cameraMode])
 
   return null
 }

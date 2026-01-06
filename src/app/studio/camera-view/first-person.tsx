@@ -36,15 +36,22 @@ const useFirstPersonCamera = (
     player.add(camera)
 
     return () => {
+      player.remove(camera)
+      scene.add(camera)
+
+      camera.position.set(10, 10, 10)
+      camera.rotation.set(0, 0, 0)
+
       scene.remove(player)
       body.geometry.dispose()
       body.material.dispose()
     }
-  }, [scene, camera,cameraMode])
+
+  }, [scene, camera, cameraMode])
 
   /* -------------------- Movement & Rotation -------------------- */
   React.useEffect(() => {
-    if (!camera || !playerRef.current||cameraMode !== "first-person") return
+    if (!camera || !playerRef.current || cameraMode !== "first-person") return
 
     const player = playerRef.current
     const direction = new THREE.Vector3()
@@ -65,11 +72,11 @@ const useFirstPersonCamera = (
       if (keys.current['KeyW']) direction.z -= 1
       if (keys.current['KeyS']) direction.z += 1
 
-      if (keys.current['Space']) direction.y =  1
+      if (keys.current['Space']) direction.y = 1
       if (keys.current['ShiftRight']) {
-        direction.y =  - 1
+        direction.y = - 1
       }
-    if (!keys.current['Space'])  player.position.setY(0)
+      if (!keys.current['Space']) player.position.setY(0)
       if (direction) {
         direction.normalize()
         direction.applyAxisAngle(
@@ -83,7 +90,7 @@ const useFirstPersonCamera = (
     }
 
     update()
-  }, [camera, keys, moveSpeed, rotationSpeed,cameraMode])
+  }, [camera, keys, moveSpeed, rotationSpeed, cameraMode])
 
   return null
 }

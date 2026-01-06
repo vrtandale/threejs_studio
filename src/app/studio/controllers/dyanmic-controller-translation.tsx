@@ -34,7 +34,6 @@ const { controllerMovement, setControllerMovement } = useStudioStore()
   /** attach to new object (auto-removes previous) */
   const attach = React.useCallback((object: THREE.Object3D) => {
     object.matrixAutoUpdate = true
-
     controlsRef.current?.attach(object)
   }, [])
 

@@ -2,10 +2,8 @@ import CameraUtil from "../../studio/camera-view/camera-util"
 import ControllerAttacher from "../../studio/controllers/controller-attacher-helper"
 import ClippingHelper from "../../toolbar/clipping/clipping-helper"
 import ModalEditor from "../../toolbar/upload-modal/modal-editor"
-
 import {
   Card,
-  CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -18,24 +16,19 @@ import {
 } from "@/components/ui/accordion"
 import './utility-panel.css'
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
 
 const UtilityPanel = () => {
   return (
      <Card className="utility-panel" style={{maxHeight:"100%", overflowY:"scroll",scrollbarWidth:"none"}}>
-      <CardHeader className="pb-3">
+      <CardHeader>
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
           🛠 Utilities Panel
         </CardTitle>
       </CardHeader>
 
-      <Separator />
-
       <ScrollArea className="h-[calc(100%-4rem)] px-4">
         <Accordion
           type="multiple"
-          defaultValue={["camera", "clipping"]}
-          className="space-y-3"
         >
           <AccordionItem value="camera">
             <AccordionTrigger>📷 Camera Tools</AccordionTrigger>
