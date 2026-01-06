@@ -16,6 +16,7 @@ import './utility-panel.css'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import ClippingHelper from "./clipping/clipping-helper"
 import ModalEditor from "./upload-modal/modal-editor"
+import LightUiHelper from "@/app/studio/lights-studio/light-ui-helper"
 
 const UtilityPanel = () => {
   return (
@@ -55,6 +56,13 @@ const UtilityPanel = () => {
             <AccordionTrigger>🎮 Controller Attacher</AccordionTrigger>
             <AccordionContent>
               <ControllerAttacher />
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="Light Controller">
+            <AccordionTrigger>☼ Light Controller</AccordionTrigger>
+            <AccordionContent>
+              <LightUiHelper />
             </AccordionContent>
           </AccordionItem>
         </Accordion>

@@ -1,6 +1,5 @@
 import { Vector3 } from "three";
 import Canvas from "./threejs/canvas/Canvas"
-import AmbientLight from "./threejs/lights/Ambient-Light";
 import UtilityPanel from "./app/components/quick-helper/quick-helper";
 import PlaneGeometry from "./app/studio/plane/plane-geom";
 import { useRayCasterController } from "./app/studio/raycaster/raycaster-hook";
@@ -22,7 +21,6 @@ const App = () => {
       <UtilityPanel/>
       <Canvas background="black">
         <OrbitControls />
-        <AmbientLight />
         <PlaneGeometry/>
         {/* <BoxGeometry color="cyan" pos={new Vector3(2,2,2)}/> */}
         {/* <SeaShade/> */}
