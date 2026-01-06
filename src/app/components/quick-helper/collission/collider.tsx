@@ -1,6 +1,6 @@
+import { useCanvasContext } from "@/threejs/canvas-utils/canvas-provider"
+import BoxGeometry from "@/threejs/geometry/BoxGeometry"
 import { useEffect, useRef } from "react"
-import { useCanvasContext } from "../../../threejs/canvas-utils/canvas-provider"
-import BoxGeometry from "../../../threejs/geometry/BoxGeometry"
 import {
   Object3D,
   Vector3,

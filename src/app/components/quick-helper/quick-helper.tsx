@@ -1,7 +1,5 @@
 import CameraUtil from "../../studio/camera-view/camera-util"
 import ControllerAttacher from "../../studio/controllers/controller-attacher-helper"
-import ClippingHelper from "../../toolbar/clipping/clipping-helper"
-import ModalEditor from "../../toolbar/upload-modal/modal-editor"
 import {
   Card,
   CardHeader,
@@ -16,6 +14,8 @@ import {
 } from "@/components/ui/accordion"
 import './utility-panel.css'
 import { ScrollArea } from "@/components/ui/scroll-area"
+import ClippingHelper from "./clipping/clipping-helper"
+import ModalEditor from "./upload-modal/modal-editor"
 
 const UtilityPanel = () => {
   return (

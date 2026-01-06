@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react"
 import * as THREE from "three"
 import { useCanvasContext } from "../../../threejs/canvas-utils/canvas-provider"
-import { useModalStore } from "../../toolbar/store/upload-modal-store"
+import { useModalStore } from "../../components/quick-helper/store/upload-modal-store"
 import useTransformController from "../controllers/dyanmic-controller-translation"
 import { useStudioStore } from "../store/studio-store"
 

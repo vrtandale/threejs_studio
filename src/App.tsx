@@ -1,8 +1,6 @@
 import { Vector3 } from "three";
 import Canvas from "./threejs/canvas/Canvas"
 import AmbientLight from "./threejs/lights/Ambient-Light";
-import ClippingTool from "./app/toolbar/clipping/clipping";
-import { useToolbarStore } from "./app/toolbar/store/toolbar-store";
 import UtilityPanel from "./app/components/quick-helper/quick-helper";
 import PlaneGeometry from "./app/studio/plane/plane-geom";
 import { useRayCasterController } from "./app/studio/raycaster/raycaster-hook";
@@ -16,7 +14,6 @@ import Sidebar from "./app/components/sidebar";
 // try to create a enviorment around it 
 // attach a player charecterizations
 const App = () => {
-  const { showQuickOptions } = useToolbarStore()
   useRayCasterController()
   useFirstPersonMovement()
   return (
@@ -31,7 +28,6 @@ const App = () => {
         {/* <SeaShade/> */}
         {/* <CustomClipping/> */}
         {/* <ColliderObject/> */}
-        {showQuickOptions && <ClippingTool />}
       </Canvas>
 
     </div>

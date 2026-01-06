@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { useCanvasContext } from '../../../threejs/canvas-utils/canvas-provider';
+import { useCanvasContext } from '../../../../threejs/canvas-utils/canvas-provider';
 import React from 'react';
 import { useClippingStore } from '../clipping/clipping-store';
 

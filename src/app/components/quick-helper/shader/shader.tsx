@@ -1,6 +1,6 @@
+import { useCanvasContext } from '@/threejs/canvas-utils/canvas-provider'
 import React, { useEffect, useRef } from 'react'
 import * as THREE from 'three'
-import { useCanvasContext } from '../../../threejs/canvas-utils/canvas-provider'
 
 const SeaShade = () => {
   const { renderer, scene, camera } = useCanvasContext()

@@ -1,4 +1,4 @@
-import { useModalStore } from "@/app/toolbar/store/upload-modal-store"
+import { useModalStore } from "@/app/components/quick-helper/store/upload-modal-store"
 import { useCanvasContext } from "@/threejs/canvas-utils/canvas-provider"
 import React from "react"
 import * as THREE from "three"

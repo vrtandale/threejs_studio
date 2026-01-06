@@ -4,16 +4,13 @@ import {
     MenubarItem,
     MenubarMenu,
     MenubarSeparator,
-    MenubarShortcut,
-    MenubarSub,
-    MenubarSubContent,
-    MenubarSubTrigger,
+
     MenubarTrigger,
 } from "@/components/ui/menubar"
 import { useDialog } from "@/providers/DialogProvider"
-import UploadModal from "../toolbar/upload-modal/upload-modal"
 import MeshGeomtriesUi from "../studio/mesh-geometry-objects/mesh-geomtries-ui"
 import UtilityPanel from "./quick-helper/quick-helper"
+import UploadModal from "./quick-helper/upload-modal/upload-modal"
 
 const Sidebar = () => {
     const { showDialog } = useDialog()
@@ -26,8 +23,6 @@ const Sidebar = () => {
                 <MenubarTrigger>Menu</MenubarTrigger>
                 <MenubarContent side="right">
                     <MenubarItem onClick={() => showDialog(<UploadModal />)}>Upload</MenubarItem>
-                    <MenubarSeparator />
-                    <MenubarItem onClick={() => showDialog(<UtilityPanel />, true)}>Quick Helper</MenubarItem>
                 </MenubarContent>
             </MenubarMenu>
 

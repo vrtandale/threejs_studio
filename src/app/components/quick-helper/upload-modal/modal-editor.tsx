@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useModalStore } from '../store/upload-modal-store';
-import { useCanvasContext } from '../../../threejs/canvas-utils/canvas-provider';
+import { useCanvasContext } from '@/threejs/canvas-utils/canvas-provider';
 
 type MeshItem = {
   id: string;
