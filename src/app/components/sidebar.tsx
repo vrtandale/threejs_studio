@@ -13,7 +13,7 @@ import {
 import { useDialog } from "@/providers/DialogProvider"
 import UploadModal from "../toolbar/upload-modal/upload-modal"
 import MeshGeomtriesUi from "../studio/mesh-geometry-objects/mesh-geomtries-ui"
-import UtilityPanel from "../toolbar/quick-helper/quick-helper"
+import UtilityPanel from "./quick-helper/quick-helper"
 
 const Sidebar = () => {
     const { showDialog } = useDialog()

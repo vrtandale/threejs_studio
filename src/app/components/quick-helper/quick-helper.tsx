@@ -1,7 +1,7 @@
 import CameraUtil from "../../studio/camera-view/camera-util"
 import ControllerAttacher from "../../studio/controllers/controller-attacher-helper"
-import ClippingHelper from "../clipping/clipping-helper"
-import ModalEditor from "../upload-modal/modal-editor"
+import ClippingHelper from "../../toolbar/clipping/clipping-helper"
+import ModalEditor from "../../toolbar/upload-modal/modal-editor"
 
 import {
   Card,
@@ -22,7 +22,7 @@ import { Separator } from "@/components/ui/separator"
 
 const UtilityPanel = () => {
   return (
-     <Card className="utility-panel" style={{height:"100%", overflowY:"scroll",scrollbarWidth:"none"}}>
+     <Card className="utility-panel" style={{maxHeight:"100%", overflowY:"scroll",scrollbarWidth:"none"}}>
       <CardHeader className="pb-3">
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
           🛠 Utilities Panel
