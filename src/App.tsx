@@ -6,6 +6,7 @@ import { useRayCasterController } from "./app/studio/raycaster/raycaster-hook";
 import OrbitControls from "./threejs/controls/orbit-controls";
 import useFirstPersonMovement from "./app/studio/camera-view/first-person";
 import Sidebar from "./app/components/sidebar";
+import usePointLight from "./app/studio/lights-studio/ambient-light";
 
 //threejs 3d enviorment studio
 // add a plane as default with x,y,z size that can be dyanmic
@@ -15,6 +16,7 @@ import Sidebar from "./app/components/sidebar";
 const App = () => {
   useRayCasterController()
   useFirstPersonMovement()
+  usePointLight()
   return (
     <div>
       <Sidebar/>

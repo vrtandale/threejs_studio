@@ -11,6 +11,7 @@ import { useDialog } from "@/providers/DialogProvider"
 import MeshGeomtriesUi from "../studio/mesh-geometry-objects/mesh-geomtries-ui"
 import UtilityPanel from "./quick-helper/quick-helper"
 import UploadModal from "./quick-helper/upload-modal/upload-modal"
+import SidebarLightAdded from "../studio/lights-studio/sidebar-light-add"
 
 const Sidebar = () => {
     const { showDialog } = useDialog()
@@ -30,7 +31,7 @@ const Sidebar = () => {
                 <MenubarTrigger>Add</MenubarTrigger>
                 <MenubarContent side="right">
                     <MenubarItem onClick={() => showDialog(<MeshGeomtriesUi />)}>Mesh</MenubarItem>
-                    <MenubarItem >Light</MenubarItem>
+                    <MenubarItem onClick={() => showDialog(<SidebarLightAdded />)}>Light</MenubarItem>
                     <MenubarItem >Camera</MenubarItem>
                 </MenubarContent>
             </MenubarMenu>

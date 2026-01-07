@@ -1,24 +1,60 @@
 import * as THREE from 'three'
 import { useCanvasContext } from '@/threejs/canvas-utils/canvas-provider'
-import React from 'react'
+import { useEffect, useRef } from 'react'
 import { useModalStore } from '@/app/components/quick-helper/store/upload-modal-store'
+import { useStudioStore } from '../store/studio-store'
 
 const usePointLight = () => {
-  const { scene } = useCanvasContext()
-  const {object3d,setObject3d,LightHelper}=useModalStore()
-  console.log("Light Helper in usePointLight:", LightHelper)
-  const addPointLight = React.useCallback(() => {
-    const pointLight = new THREE.PointLight(LightHelper.color, LightHelper.intensity, LightHelper.distance, LightHelper.decay);
-    pointLight.position.set(5, 5, 5)
-    console.log("Adding Point Light:", LightHelper)
-    scene.add(pointLight)
-    const sphereSize = 1;
-    const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
-    scene.add( pointLightHelper );
-    object3d ? setObject3d([...object3d, pointLightHelper]) : setObject3d([pointLightHelper])
-  }, [scene,LightHelper.active,LightHelper.color,LightHelper.intensity,LightHelper.distance,LightHelper.decay])
+    const { scene } = useCanvasContext()
+    const { LightHelper } = useStudioStore()
+    const { setObject3d, object3d } = useModalStore()
 
-  return addPointLight
+    const lightsRef = useRef<THREE.PointLight[]>([])
+    const helpersRef = useRef<THREE.PointLightHelper[]>([])
+
+    useEffect(() => {
+        // Remove old lights
+        lightsRef.current.forEach(light => scene.remove(light))
+        helpersRef.current.forEach(helper => scene.remove(helper))
+        console.log('Updating Point Lights', LightHelper)
+        lightsRef.current = []
+        helpersRef.current = []
+
+        const newHelpers: THREE.Object3D[] = []
+
+        LightHelper.forEach((config, index) => {
+            if (config.active !== 'point') return
+
+            const light = new THREE.PointLight(
+                config.color,
+                config.intensity,
+                config.distance,
+                config.decay
+            )
+
+            // simple deterministic placement (can improve later)
+            light.position.set(5 + index * 2, 5, 5)
+
+            scene.add(light)
+            lightsRef.current.push(light)
+
+            const helper = new THREE.PointLightHelper(light, 1)
+            scene.add(helper)
+            helper.userData={id: config.id,type:'light'}
+            helpersRef.current.push(helper)
+            newHelpers.push(helper)
+        })
+        const removedObjects = object3d?.filter(obj=>obj.userData.type!=='light')
+
+        removedObjects?setObject3d([...removedObjects, ...newHelpers]):setObject3d(newHelpers)
+
+        return () => {
+            lightsRef.current.forEach(light => scene.remove(light))
+            helpersRef.current.forEach(helper => scene.remove(helper))
+            lightsRef.current = []
+            helpersRef.current = []
+        }
+    }, [scene, LightHelper, setObject3d])
 }
 
 export default usePointLight
