@@ -6,13 +6,14 @@ import { useStudioStore } from "../store/studio-store"
 
 const useController = () => {
   const { scene, camera, renderer } = useCanvasContext()
-const { controllerMovement, setControllerMovement } = useStudioStore()
-
+const { controllerMovement, setControllerMovement,animationFrames,setAnimationFrames } = useStudioStore()
   const controlsRef = React.useRef<TransformControls | null>(null)
+  setTimeout(() => {
+    console.log(animationFrames)
 
+  }, 1000);
   React.useEffect(() => {
     if (!camera || !renderer || !scene ||!controllerMovement) return
-
     const controls = new TransformControls(camera, renderer.domElement)
    controls.setMode(controllerMovement)
 
@@ -32,10 +33,26 @@ const { controllerMovement, setControllerMovement } = useStudioStore()
   }, [scene, camera, renderer,controllerMovement])
 
   /** attach to new object (auto-removes previous) */
-  const attach = React.useCallback((object: THREE.Object3D) => {
-    object.matrixAutoUpdate = true
-    controlsRef.current?.attach(object)
-  }, [])
+const attach = React.useCallback((object: THREE.Object3D) => {
+  object.matrixAutoUpdate = true
+  controlsRef.current?.attach(object)
+
+  controlsRef.current?.addEventListener('objectChange', () => {
+    const controlledObject = controlsRef.current?.object
+    if (!controlledObject) return
+
+    controlledObject.updateMatrix()
+    const newMatrix = controlledObject.matrix.clone()
+    const key = controlledObject.uuid
+    const existingFrames = animationFrames[key] || []
+    const updatedFrames = [...existingFrames, newMatrix]
+    setAnimationFrames(
+     { [key]: updatedFrames }
+    )
+  })
+}, [animationFrames, setAnimationFrames])
+
+
 
   /** completely hide controller */
   const detach = React.useCallback(() => {

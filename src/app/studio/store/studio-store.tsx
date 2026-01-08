@@ -1,6 +1,6 @@
 import type { TransformControlsMode } from 'three/examples/jsm/Addons.js'
 import { create } from 'zustand'
-
+import * as THREE from 'three'
 type studioStore = {
   controllerMovement: TransformControlsMode | null,
   setControllerMovement: (obj: TransformControlsMode | null) => void
@@ -10,6 +10,12 @@ type studioStore = {
 
   cameraMode: "orbit" | "first-person",
   setCameraMode: (mode: "orbit" | "first-person") => void
+
+  animationFrames: {
+    [key: string]: THREE.Matrix4[]
+  },
+
+  setAnimationFrames: (frames: { [key: string]: THREE.Matrix4[] }) => void,
 
   LightHelper: {
     id:string,
@@ -41,7 +47,10 @@ export const useStudioStore = create<studioStore>((set) => ({
   setCameraMode: (mode) => set({ cameraMode: mode }),
 
   LightHelper: [],
-  setLightHelper: (obj) => set({ LightHelper: obj })
+  setLightHelper: (obj) => set({ LightHelper: obj }),
+
+  animationFrames: {},
+  setAnimationFrames: (frames) => set({ animationFrames: frames }),
 }))
 
 
