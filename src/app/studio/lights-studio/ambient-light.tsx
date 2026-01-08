@@ -120,7 +120,7 @@ export function createLightWithHelper(
         config.intensity,
         config.distance,
         config.angle,
-        0.1,
+        0,
         config.decay
       )
       light.position.set(5, 10, 5)

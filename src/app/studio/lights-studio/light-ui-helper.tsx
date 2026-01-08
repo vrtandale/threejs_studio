@@ -3,21 +3,29 @@ import { useStudioStore } from "../store/studio-store"
 
 const LightUiHelper = () => {
   const { LightHelper, setLightHelper } = useStudioStore()
-  const [selectedLight, setSelectedLight] = React.useState<string>(LightHelper[0]?.id || "")
+
+  const [selectedLight, setSelectedLight] = React.useState<string>(
+    LightHelper[0]?.id ?? ""
+  )
+
+  const currentLight = React.useMemo(
+    () => LightHelper.find((light) => light.id === selectedLight),
+    [LightHelper, selectedLight]
+  )
+
   const update = (key: string, value: any) => {
     if (!selectedLight) return
-    const updatedLights = LightHelper.map((light) => {
-      if (light.id === selectedLight) {
-        return {
-          ...light,
-          [key]: value,
-        }
-      }
-      return light
-    })
-    setLightHelper(updatedLights)
+
+    setLightHelper(
+      LightHelper.map((light) =>
+        light.id === selectedLight
+          ? { ...light, [key]: value }
+          : light
+      )
+    )
   }
 
+  if (!currentLight) return null
 
   return (
     <div className="rounded-xl bg-zinc-900 p-4 text-zinc-200 shadow-lg space-y-4">
@@ -25,17 +33,17 @@ const LightUiHelper = () => {
         Light Settings
       </h3>
 
-      {/* Light Type */}
+      {/* Light Selector */}
       <div className="space-y-1">
-        <label className="text-xs text-zinc-400">Light Type</label>
+        <label className="text-xs text-zinc-400">Light</label>
         <select
-          value={LightHelper.find((light) => light.id === selectedLight)?.id || ""}
-          onChange={(e) => setSelectedLight(e.target.value )}
+          value={selectedLight}
+          onChange={(e) => setSelectedLight(e.target.value)}
           className="w-full rounded-md bg-zinc-800 px-2 py-1 text-sm outline-none focus:ring-1 focus:ring-indigo-500"
         >
-          {LightHelper.map((type) => (
-            <option key={type.active} value={type.id}>
-              {type.active}__{type.id.trim().slice(0, 5)}
+          {LightHelper.map((light) => (
+            <option key={light.id} value={light.id}>
+              {light.active}__{light.id.slice(0, 5)}
             </option>
           ))}
         </select>
@@ -46,65 +54,59 @@ const LightUiHelper = () => {
         <label className="text-xs text-zinc-400">Color</label>
         <input
           type="color"
-          value={LightHelper.find((light) => light.id === selectedLight)?.color || "#ffffff"}
-          onChange={(e) => {
-            update("color", e.target.value)
-          }}
+          value={currentLight.color ?? "#ffffff"}
+          onChange={(e) => update("color", e.target.value)}
           className="h-8 w-10 cursor-pointer rounded bg-transparent"
         />
       </div>
 
-      Intensity
+      {/* Intensity */}
       <div className="space-y-1">
         <label className="text-xs text-zinc-400">
-          Intensity: {LightHelper.find((light) => light.id === selectedLight)?.intensity.toFixed(2)}
+          Intensity: {currentLight.intensity.toFixed(2)}
         </label>
         <input
           type="range"
           min={0}
           max={100}
           step={0.1}
-          value={LightHelper.find((light) => light.id === selectedLight)?.intensity}
+          value={currentLight.intensity}
           onChange={(e) => update("intensity", Number(e.target.value))}
           className="w-full"
         />
       </div>
 
       {/* Distance */}
-      {/* {showDistance && (
-        <div className="space-y-1">
-          <label className="text-xs text-zinc-400">
-            Distance: {LightHelper.distance}
-          </label>
-          <input
-            type="range"
-            min={0}
-            max={500}
-            step={1}
-            value={LightHelper.distance}
-            onChange={(e) => update("distance", Number(e.target.value))}
-            className="w-full"
-          />
-        </div>
-      )} */}
+      <div className="space-y-1">
+        <label className="text-xs text-zinc-400">
+          Distance: {currentLight.distance}
+        </label>
+        <input
+          type="range"
+          min={0}
+          max={500}
+          step={1}
+          value={currentLight.distance}
+          onChange={(e) => update("distance", Number(e.target.value))}
+          className="w-full"
+        />
+      </div>
 
       {/* Decay */}
-      {/* {showDecay && (
-        <div className="space-y-1">
-          <label className="text-xs text-zinc-400">
-            Decay: {LightHelper.decay.toFixed(2)}
-          </label>
-          <input
-            type="range"
-            min={0}
-            max={5}
-            step={0.1}
-            value={LightHelper.decay}
-            onChange={(e) => update("decay", Number(e.target.value))}
-            className="w-full"
-          />
-        </div>
-      )} */}
+      <div className="space-y-1">
+        <label className="text-xs text-zinc-400">
+          Decay: {currentLight.decay.toFixed(2)}
+        </label>
+        <input
+          type="range"
+          min={0}
+          max={5}
+          step={0.1}
+          value={currentLight.decay}
+          onChange={(e) => update("decay", Number(e.target.value))}
+          className="w-full"
+        />
+      </div>
     </div>
   )
 }
