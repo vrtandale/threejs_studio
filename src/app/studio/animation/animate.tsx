@@ -74,7 +74,7 @@ const Animate = () => {
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
             Animation
             {/* Start Recording */}
-            <Button className="bg-white" onClick={() => setRecordingFrames(true)}>
+            <Button className="bg-white" onClick={() => setRecordingFrames(!recordingFrames)}>
                 {!recordingFrames ? <Circle
                     size={20}
                     color={recordingFrames ? "#999" : "red"}
