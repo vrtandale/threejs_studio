@@ -38,18 +38,18 @@ const attach = React.useCallback((object: THREE.Object3D) => {
   controlsRef.current?.attach(object)
 
   controlsRef.current?.addEventListener('objectChange', () => {
-    const controlledObject = controlsRef.current?.object
-    if (!controlledObject) return
+  const controlledObject = controlsRef.current?.object
+  if (!controlledObject) return
 
-    controlledObject.updateMatrix()
-    const newMatrix = controlledObject.matrix.clone()
-    const key = controlledObject.uuid
-    const existingFrames = animationFrames[key] || []
-    const updatedFrames = [...existingFrames, newMatrix]
-    setAnimationFrames(
-     { [key]: updatedFrames }
-    )
-  })
+  controlledObject.updateMatrix()
+  const newMatrix = controlledObject.matrix.clone()
+  const key = controlledObject.uuid
+
+  setAnimationFrames(prev => ({
+    ...prev,
+    [key]: [...(prev[key] ?? []), newMatrix]
+  }))
+})
 }, [animationFrames, setAnimationFrames])
 
 

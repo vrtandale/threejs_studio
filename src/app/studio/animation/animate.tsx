@@ -15,7 +15,7 @@ const Animate = () => {
                 setTimeout(() => {
                     object.matrix.copy(matrix)
                     object.matrix.decompose(object.position, object.quaternion, object.scale)
-                }, index * 100) // 100ms per frame
+                }, index * 20) // 100ms per frame
             })        
         })
     }

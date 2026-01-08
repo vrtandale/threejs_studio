@@ -15,7 +15,9 @@ type studioStore = {
     [key: string]: THREE.Matrix4[]
   },
 
-  setAnimationFrames: (frames: { [key: string]: THREE.Matrix4[] }) => void,
+  setAnimationFrames: (
+  updater: (prev: Record<string, THREE.Matrix4[]>) => Record<string, THREE.Matrix4[]>
+) => void
 
   LightHelper: {
     id:string,
@@ -50,7 +52,9 @@ export const useStudioStore = create<studioStore>((set) => ({
   setLightHelper: (obj) => set({ LightHelper: obj }),
 
   animationFrames: {},
-  setAnimationFrames: (frames) => set({ animationFrames: frames }),
+  setAnimationFrames: (updater) => set(state => ({
+  animationFrames: updater(state.animationFrames)
+})),
 }))
 
 
