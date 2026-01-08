@@ -6,12 +6,12 @@ import { useStudioStore } from "../store/studio-store"
 
 const useController = () => {
   const { scene, camera, renderer } = useCanvasContext()
-const { controllerMovement, setControllerMovement,animationFrames,setAnimationFrames } = useStudioStore()
+const { controllerMovement,recordingFrames,animationFrames,setAnimationFrames } = useStudioStore()
   const controlsRef = React.useRef<TransformControls | null>(null)
   setTimeout(() => {
-    console.log(animationFrames)
+    console.log(animationFrames,recordingFrames)
 
-  }, 1000);
+  }, 10);
   React.useEffect(() => {
     if (!camera || !renderer || !scene ||!controllerMovement) return
     const controls = new TransformControls(camera, renderer.domElement)
@@ -39,7 +39,7 @@ const attach = React.useCallback((object: THREE.Object3D) => {
 
   controlsRef.current?.addEventListener('objectChange', () => {
   const controlledObject = controlsRef.current?.object
-  if (!controlledObject) return
+  if (!controlledObject || recordingFrames) return console.log('returning from recordingFrames')
 
   controlledObject.updateMatrix()
   const newMatrix = controlledObject.matrix.clone()

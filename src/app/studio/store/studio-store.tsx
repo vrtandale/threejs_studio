@@ -15,6 +15,9 @@ type studioStore = {
     [key: string]: THREE.Matrix4[]
   },
 
+  recordingFrames: boolean,
+  setRecordingFrames: (rec: boolean) => void,
+
   setAnimationFrames: (
   updater: (prev: Record<string, THREE.Matrix4[]>) => Record<string, THREE.Matrix4[]>
 ) => void
@@ -55,6 +58,9 @@ export const useStudioStore = create<studioStore>((set) => ({
   setAnimationFrames: (updater) => set(state => ({
   animationFrames: updater(state.animationFrames)
 })),
+
+  recordingFrames: false,
+  setRecordingFrames: (rec) => set({ recordingFrames: rec }),
 }))
 
 
