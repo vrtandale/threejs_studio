@@ -51,6 +51,7 @@ const ClippingTool = () => {
                 }
             }
         });
+        
         return () => {
             scene.remove(helpers);
         };

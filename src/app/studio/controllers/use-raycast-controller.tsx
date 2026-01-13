@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react"
 import * as THREE from "three"
 import { useCanvasContext } from "../../../threejs/canvas-utils/canvas-provider"
-import useTransformController from "../controllers/dyanmic-controller-translation"
+import useTransformController from "./dyanmic-controller-translation"
 import { useStudioStore } from "../store/studio-store"
 
 export const useRayCasterController = () => {
