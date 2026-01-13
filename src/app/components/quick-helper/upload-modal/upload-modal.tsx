@@ -1,15 +1,15 @@
 import React, { useRef, useState } from "react";
 import './uploadmodal.css'
-import { useModalStore } from "../store/upload-modal-store";
 import useGLTFLoader from "@/threejs/object-loaders/gltf-glb-hook";
 import { useCanvasContext } from "@/threejs/canvas-utils/canvas-provider";
+import { useStudioStore } from "@/app/studio/store/studio-store";
 const UploadModal = () => {
     const fileRef = useRef<HTMLInputElement>(null);
     const [fileName, setFileName] = useState<string>("");
     const [fileUrl, setFileUrl] = useState<string>("");
     const loader = useGLTFLoader();
     const { scene } = useCanvasContext()
-    const {setObject3d,object3d}=useModalStore()
+    const {setObject3d,object3d}=useStudioStore()
     const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;

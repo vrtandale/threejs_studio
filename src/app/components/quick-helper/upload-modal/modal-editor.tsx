@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { useModalStore } from '../store/upload-modal-store';
 import { useCanvasContext } from '@/threejs/canvas-utils/canvas-provider';
+import { useStudioStore } from '@/app/studio/store/studio-store';
 
 type MeshItem = {
   id: string;
@@ -11,7 +11,7 @@ type MeshItem = {
 };
 
 const ModalEditor = () => {
-  const { object3d } = useModalStore();
+  const { object3d } = useStudioStore();
   const { camera, renderer, scene } = useCanvasContext()
   const [meshes, setMeshes] = useState<MeshItem[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);

@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 import { useCanvasContext } from '@/threejs/canvas-utils/canvas-provider'
 import { useEffect, useRef } from 'react'
-import { useModalStore } from '@/app/components/quick-helper/store/upload-modal-store'
 import { useStudioStore } from '../store/studio-store'
 
 
@@ -9,7 +8,7 @@ import { useStudioStore } from '../store/studio-store'
 const useLights = () => {
   const { scene } = useCanvasContext()
   const { LightHelper } = useStudioStore()
-  const { setObject3d, object3d } = useModalStore()
+  const { setObject3d, object3d } = useStudioStore()
 
   const lightsRef = useRef<THREE.Light[]>([])
   const helpersRef = useRef<THREE.Object3D[]>([])

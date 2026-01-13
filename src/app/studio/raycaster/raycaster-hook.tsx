@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react"
 import * as THREE from "three"
 import { useCanvasContext } from "../../../threejs/canvas-utils/canvas-provider"
-import { useModalStore } from "../../components/quick-helper/store/upload-modal-store"
 import useTransformController from "../controllers/dyanmic-controller-translation"
 import { useStudioStore } from "../store/studio-store"
 
@@ -9,9 +8,8 @@ export const useRayCasterController = () => {
   const { renderer, camera, scene } = useCanvasContext()
   const raycaster = useRef(new THREE.Raycaster())
   const mouse = useRef(new THREE.Vector2())
-  const { object3d } = useModalStore()
   const { attach } = useTransformController()
-  const {singleGeometryRaycast}=useStudioStore()
+  const { singleGeometryRaycast, object3d } = useStudioStore()
   useEffect(() => {
     if (!renderer || !camera || !scene) return
 
@@ -27,6 +25,7 @@ export const useRayCasterController = () => {
         object3d ?? [],
         true
       ).filter(i => !i.object.userData.isGizmo)
+      
       console.log('Intersects:', intersects)
 
       if (intersects.length > 0) {

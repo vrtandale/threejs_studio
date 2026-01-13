@@ -1,6 +1,7 @@
 import type { TransformControlsMode } from 'three/examples/jsm/Addons.js'
 import { create } from 'zustand'
 import * as THREE from 'three'
+import type { Object3D } from 'three'
 type studioStore = {
   controllerMovement: TransformControlsMode | null,
   setControllerMovement: (obj: TransformControlsMode | null) => void
@@ -19,11 +20,11 @@ type studioStore = {
   setRecordingFrames: (rec: boolean) => void,
 
   setAnimationFrames: (
-  updater: (prev: Record<string, THREE.Matrix4[]>) => Record<string, THREE.Matrix4[]>
-) => void
+    updater: (prev: Record<string, THREE.Matrix4[]>) => Record<string, THREE.Matrix4[]>
+  ) => void
 
   LightHelper: {
-    id:string,
+    id: string,
     active: LightType,
     color: string,
     intensity: number,
@@ -32,7 +33,7 @@ type studioStore = {
     angle: number
   }[],
   setLightHelper: (obj: {
-    id:string,
+    id: string,
     active: LightType,
     color: string,
     intensity: number,
@@ -40,6 +41,11 @@ type studioStore = {
     decay: number,
     angle: number
   }[]) => void,
+
+  object3d: THREE.Object3D[] | null
+  setObject3d: (obj: Object3D[]) => void
+  selectedMesh: Object3D | null,
+  setSelectedMesh: (obj: Object3D) => void,
 }
 export const useStudioStore = create<studioStore>((set) => ({
   controllerMovement: null,
@@ -56,11 +62,19 @@ export const useStudioStore = create<studioStore>((set) => ({
 
   animationFrames: {},
   setAnimationFrames: (updater) => set(state => ({
-  animationFrames: updater(state.animationFrames)
-})),
+    animationFrames: updater(state.animationFrames)
+  })),
 
   recordingFrames: false,
   setRecordingFrames: (rec) => set({ recordingFrames: rec }),
+
+  object3d: null,
+  setObject3d(obj) {
+    set({ object3d: obj })
+  },
+  
+  selectedMesh: null,
+  setSelectedMesh: (obj) => set({ selectedMesh: obj }),
 }))
 
 
