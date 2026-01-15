@@ -4,6 +4,17 @@ import { useStudioStore } from "../store/studio-store"
 import { useCanvasContext } from "@/threejs/canvas-utils/canvas-provider"
 import * as THREE from 'three'
 import { Button } from "@/components/ui/button"
+
+type AnimationState = {
+    object: THREE.Object3D
+    frames: THREE.Matrix4[]
+    frameIndex: number
+    t: number
+}
+
+const activeAnimations: AnimationState[] = []
+
+
 const Animate = () => {
     const {
         animationFrames,
@@ -11,61 +22,35 @@ const Animate = () => {
         setRecordingFrames
     } = useStudioStore()
 
-    const { scene } = useCanvasContext()
+    const { scene} = useCanvasContext()
+    //to run the animation 
+    //create a function that works with requestAnimationFrame
+    //what will happen it will take all the animation objects from the store
+    //start to loop for each key until the frames are finished
 
-    function runAnimation() {
-        Object.entries(animationFrames).forEach(([key, frames]) => {
+
+    async function runAnimation3(key: string, frames: THREE.Matrix4[], frameNumber: number = 0) {
+        return requestAnimationFrame(() => {
             const object = scene.getObjectByProperty("uuid", key)
-            if (!object) return
+            if (!object || frames.length === 0) return null
+            const matrix = frames[frameNumber]
+            object.matrix.copy(matrix)
+            object.matrix.decompose(
+                object.position,
+                object.quaternion,
+                object.scale
+            )
+            object.updateMatrix()
 
-            frames.forEach((matrix, index) => {
-                setTimeout(() => {
-                    object.matrix.copy(matrix)
-                    object.matrix.decompose(
-                        object.position,
-                        object.quaternion,
-                        object.scale
-                    )
-                }, index * 20)
-            })
+            if(frameNumber < frames.length - 1) {
+               return runAnimation3(key, frames, frameNumber + 1)
+            }
         })
     }
 
-    function runAnimation2() {
-        Object.entries(animationFrames).forEach(([key, frames]) => {
-            const object = scene.getObjectByProperty("uuid", key)
-            if (!object || frames.length === 0) return
-
-            frames.forEach((matrix, index) => {
-                const nextMatrix = frames[index + 1]
-                if (!nextMatrix) return
-
-                setTimeout(() => {
-                    // Decompose current frame
-                    const posA = new THREE.Vector3()
-                    const quatA = new THREE.Quaternion()
-                    const scaleA = new THREE.Vector3()
-
-                    matrix.decompose(posA, quatA, scaleA)
-
-                    // Decompose next frame
-                    const posB = new THREE.Vector3()
-                    const quatB = new THREE.Quaternion()
-                    const scaleB = new THREE.Vector3()
-
-                    nextMatrix.decompose(posB, quatB, scaleB)
-
-                    // LERP factor (0 → 1)
-                    const t = 0.1
-
-                    // Interpolate
-                    object.position.lerpVectors(posA, posB, t)
-                    object.quaternion.slerpQuaternions(quatA, quatB, t)
-                    object.scale.lerpVectors(scaleA, scaleB, t)
-
-                    object.updateMatrix()
-                }, index * 20)
-            })
+    function initAnimate() {
+        Object.keys(animationFrames).map(async (key) => {
+            await runAnimation3(key, animationFrames[key])
         })
     }
 
@@ -90,7 +75,7 @@ const Animate = () => {
 
 
             {/* Play Animation */}
-            <Button className="bg-white" onClick={runAnimation2}>
+            <Button className="bg-white" onClick={initAnimate}>
                 <Play
                     size={22}
                     color="black"

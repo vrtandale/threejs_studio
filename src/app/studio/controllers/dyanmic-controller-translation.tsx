@@ -33,19 +33,7 @@ const useController = () => {
     object.matrixAutoUpdate = true
     controlsRef.current?.attach(object)
 
-    controlsRef.current?.addEventListener('objectChange', () => {
-      const controlledObject = controlsRef.current?.object
-      if (!controlledObject || recordingFrames) return console.log('returning from recordingFrames')
-
-      controlledObject.updateMatrix()
-      const newMatrix = controlledObject.matrix.clone()
-      const key = controlledObject.uuid
-
-      setAnimationFrames(prev => ({
-        ...prev,
-        [key]: [...(prev[key] ?? []), newMatrix]
-      }))
-    })
+    controlsRef.current?.addEventListener('objectChange', addEventListeners())
   }, [animationFrames, setAnimationFrames])
 
 
@@ -53,10 +41,27 @@ const useController = () => {
   /** completely hide controller */
   const detach = React.useCallback(() => {
     controlsRef.current?.detach()
+
+    controlsRef.current?.removeEventListener('objectChange', addEventListeners())
   }, [controllerMovement])
 
+  const addEventListeners = React.useCallback(() => () => {
+    const controlledObject = controlsRef.current?.object
+
+
+    if (!controlledObject || recordingFrames) return console.log('returning from recordingFrames')
+    controlledObject.updateMatrix()
+    const newMatrix = controlledObject.matrix.clone()
+    const key = controlledObject.uuid
+    setAnimationFrames(prev => ({
+      ...prev,
+      [key]: [...(prev[key] ?? []), newMatrix]
+    }))
+  }, [animationFrames, setAnimationFrames])
   return { attach, detach }
 }
+
+
 
 
 
