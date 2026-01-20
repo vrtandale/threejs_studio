@@ -12,6 +12,7 @@ import MeshGeomtriesUi from "../studio/mesh-geometry-objects/mesh-geomtries-ui"
 import UploadModal from "./quick-helper/upload-modal/upload-modal"
 import SidebarLightAdded from "../studio/lights-studio/sidebar-light-add"
 import Animate from "../studio/animation/animate"
+import EnviromentManager from "../studio/enviroment/enviroment"
 
 const Sidebar = () => {
     const { showDialog } = useDialog()
@@ -33,6 +34,7 @@ const Sidebar = () => {
                 <MenubarContent side="right">
                     <MenubarItem onClick={() => showDialog(<MeshGeomtriesUi />)}>Mesh</MenubarItem>
                     <MenubarItem onClick={() => showDialog(<SidebarLightAdded />)}>Light</MenubarItem>
+                    <MenubarItem onClick={() => showDialog(<EnviromentManager />)}>Environment</MenubarItem>
                 </MenubarContent>
             </MenubarMenu>
             

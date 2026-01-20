@@ -12,7 +12,6 @@ const useCanvas = ({background}:Omit<CanvasType,'children'>) => {
         const animate = () => {
             requestAnimationFrame(animate);
             renderer.render(scene, camera);
-            scene.background = new THREE.Color(background || 'white');
             renderer.setSize(window.innerWidth, window.innerHeight);
         };
         animate();
