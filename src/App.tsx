@@ -8,6 +8,7 @@ import useFirstPersonMovement from "./app/studio/camera-view/first-person";
 import Sidebar from "./app/components/sidebar";
 import useLights from "./app/studio/lights-studio/ambient-light";
 import EnviromentManager from "./app/studio/enviroment/enviroment";
+import Sin from "./app/studio/maths/sin";
 
 //threejs 3d enviorment studio
 // add a plane as default with x,y,z size that can be dyanmic
@@ -22,6 +23,7 @@ const App = () => {
     <div>
       <Sidebar/>
       <UtilityPanel/>
+      <Sin/>
       <Canvas >
         <OrbitControls />
         <PlaneGeometry/>
