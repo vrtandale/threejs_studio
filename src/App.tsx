@@ -26,7 +26,7 @@ const App = () => {
       <Sin/>
       <Canvas >
         <OrbitControls />
-        <PlaneGeometry/>
+        {/* <PlaneGeometry/> */}
         {/* <BoxGeometry color="cyan" pos={new Vector3(2,2,2)}/> */}
         {/* <SeaShade/> */}
         {/* <CustomClipping/> */}
