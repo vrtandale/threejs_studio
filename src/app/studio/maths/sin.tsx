@@ -6,13 +6,13 @@ const Sin = () => {
   const { scene } = useCanvasContext()
   const linesRef = React.useRef<THREE.Line[]>([])
   const clock = React.useRef(new THREE.Clock())
-
-  React.useEffect(() => {
+  React.useEffect(() => { 
     const lineCount = 100
 
     for (let z = 0; z < lineCount; z++) {
       const line = createLine(z)
       linesRef.current.push(line)
+      
       scene.add(line)
     }
 
@@ -33,10 +33,10 @@ const Sin = () => {
     geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3))
 
     const material = new THREE.LineBasicMaterial({ color: 'blue' })
-    const line = new THREE.Line(geometry, material)
+    const line = new THREE.Line(geometry, material);
 
     // store per-line phase
-    ;(line as any).phase = z * 0.3
+    (line as any).phase = z * 0.03
 
     return line
   }
@@ -50,9 +50,10 @@ const Sin = () => {
       const phase = (line as any).phase
 
       for (let i = 0; i < pos.count; i++) {
-        const x = pos.getX(i)
-        const y = 5 * Math.cos(0.2 * x + time + phase)
-        pos.setY(i, y)
+        const x=Math.sqrt(pos.getX(i))
+        const y = Math.sqrt(0.2 * x + time + phase)
+
+        pos.setY(x, y)
       }
 
       pos.needsUpdate = true

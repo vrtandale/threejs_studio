@@ -4,7 +4,7 @@ import { useCanvasContext } from "../../../threejs/canvas-utils/canvas-provider"
 import useTransformController from "./dyanmic-controller-translation"
 import { useStudioStore } from "../store/studio-store"
 
-export const useRayCasterController = () => {
+export const useRayCasterController = ({customHandleClick}:{customHandleClick?: (event: MouseEvent) => void}) => {
   const { renderer, camera, scene } = useCanvasContext()
   const raycaster = useRef(new THREE.Raycaster())
   const mouse = useRef(new THREE.Vector2())
@@ -26,7 +26,6 @@ export const useRayCasterController = () => {
         true
       ).filter(i => !i.object.userData.isGizmo)
       
-      console.log('Intersects:', intersects)
 
       if (intersects.length > 0) {
         const mesh = singleGeometryRaycast?intersects[0].object:getSelectableRoot(intersects[0].object)
@@ -34,11 +33,13 @@ export const useRayCasterController = () => {
       }
     }
 
-    renderer.domElement.addEventListener("pointerdown", handleClick)
+    renderer.domElement.addEventListener("pointerdown", customHandleClick??handleClick)
     return () => {
-      renderer.domElement.removeEventListener("pointerdown", handleClick)
+      renderer.domElement.removeEventListener("pointerdown", customHandleClick??handleClick)
     }
   }, [renderer, camera, scene, object3d, attach,singleGeometryRaycast])
+
+  return {raycaster,mouse}
 }
 
 

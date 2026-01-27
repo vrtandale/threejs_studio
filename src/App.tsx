@@ -9,6 +9,7 @@ import Sidebar from "./app/components/sidebar";
 import useLights from "./app/studio/lights-studio/ambient-light";
 import EnviromentManager from "./app/studio/enviroment/enviroment";
 import Sin from "./app/studio/maths/sin";
+import ScaleDistance from "./app/studio/maths/scale";
 
 //threejs 3d enviorment studio
 // add a plane as default with x,y,z size that can be dyanmic
@@ -16,15 +17,15 @@ import Sin from "./app/studio/maths/sin";
 // try to create a enviorment around it 
 // attach a player charecterizations
 const App = () => {
-  useRayCasterController()
+  useRayCasterController({})
   useFirstPersonMovement()
   useLights()
   return (
     <div>
       <Sidebar/>
       <UtilityPanel/>
-      <Sin/>
-      <Canvas >
+      <ScaleDistance/>
+        <Canvas >
         <OrbitControls />
         {/* <PlaneGeometry/> */}
         {/* <BoxGeometry color="cyan" pos={new Vector3(2,2,2)}/> */}
