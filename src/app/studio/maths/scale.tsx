@@ -67,7 +67,9 @@ const ScaleDistance = () => {
         color: 0x00ffff,
         linewidth: 2, // (note: ignored on most platforms)
       })
+      
       console.log("Distance:", pointMap[0].distanceTo(pointMap[1]))
+      console.log("Custom Distance:", customDistanceFunction(pointMap[0], pointMap[1]))
       const line = new THREE.Line(geometry, material)
       scene.add(line)
       lineRef.current = line
@@ -78,3 +80,11 @@ const ScaleDistance = () => {
 }
 
 export default ScaleDistance
+
+const customDistanceFunction = (pointA: THREE.Vector3, pointB: THREE.Vector3) => {
+  return Math.sqrt(
+    Math.pow(pointB.x - pointA.x, 2) +
+    Math.pow(pointB.y - pointA.y, 2) +
+    Math.pow(pointB.z - pointA.z, 2)
+  )
+}
