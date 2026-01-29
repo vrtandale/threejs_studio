@@ -10,6 +10,8 @@ import useLights from "./app/studio/lights-studio/ambient-light";
 import EnviromentManager from "./app/studio/enviroment/enviroment";
 import Sin from "./app/studio/maths/sin";
 import ScaleDistance from "./app/studio/maths/scale";
+import ShaderWaterSea from "./app/studio/maths/shade";
+import SeaShade from "./app/components/quick-helper/shader/shader";
 
 //threejs 3d enviorment studio
 // add a plane as default with x,y,z size that can be dyanmic
@@ -26,6 +28,7 @@ const App = () => {
       <UtilityPanel/>
       <ScaleDistance/>
         <Canvas >
+          <ShaderWaterSea/>
         <OrbitControls />
         {/* <PlaneGeometry/> */}
         {/* <BoxGeometry color="cyan" pos={new Vector3(2,2,2)}/> */}
