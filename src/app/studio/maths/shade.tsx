@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import React from 'react';
 import { useCanvasContext } from '@/threejs/canvas-utils/canvas-provider';
+import { fragmentShader, noiseWebglShader, vertexShader } from './shader';
 
 const ShaderWaterSea = () => {
     const { scene } = useCanvasContext();
@@ -20,96 +21,7 @@ const ShaderWaterSea = () => {
         uniforms.u_NoiseScale = { value: 0.01 };
         uniforms.u_RingScale = { value: 0.06 };
         uniforms.u_Contrast = { value: 4.0 };
-        const vertexShader = `
-            uniform float time;
-            varying vec2 vUv;
-            varying vec4 color;
-            varying vec3 vPosition;
-            void main() {
-                vUv = uv;
-                vec3 pos = position;
-                pos.z += sin(pos.x * 0.2 + time) * 1.0;
-                pos.z += sin(pos.x * 0.3 + time) * 1.0;
-                pos.x += sin(pos.z * 0.3 + time) * 1.0;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-                vPosition = pos;
-                color = vec4(pos, 1.0);
-            }
-        `;
-        const fragmentShader = `
-// Description : Array and textureless GLSL 2D simplex noise function.
-//      Author : Ian McEwan, Ashima Arts.
-//  Maintainer : stegu
-//     Lastmod : 20110822 (ijm)
-//     License : Copyright (C) 2011 Ashima Arts. All rights reserved.
-//               Distributed under the MIT License. See LICENSE file.
-//               https://github.com/ashima/webgl-noise
-//               https://github.com/stegu/webgl-noise
-
-vec3 mod289(vec3 x) {
-    return x - floor(x * (1.0 / 289.0)) * 289.0;
-}
-    
-vec2 mod289(vec2 x) {
-    return x - floor(x * (1.0 / 289.0)) * 289.0;
-}
-
-vec3 permute(vec3 x) {
-    return mod289(((x * 34.0) + 10.0) * x);
-}
-
-float snoise(vec2 v) {
-    const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0
-                        0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)
-                       -0.577350269189626,  // -1.0 + 2.0 * C.x
-                        0.024390243902439); // 1.0 / 41.0
-    // First corner
-    vec2 i = floor(v + dot(v, C.yy));
-    vec2 x0 = v - i + dot(i, C.xx);
-    // Other corners
-    vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-    vec4 x12 = x0.xyxy + C.xxzz;
-    x12.xy -= i1;
-    // Permutations
-    i = mod289(i); // Avoid truncation effects in permutation
-    vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
-    vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
-    m = m * m;
-    m = m * m;
-    // Gradients: 41 points uniformly over a line, mapped onto a diamond.
-    // The ring size 17*17 = 289 is close to a multiple of 41 (41*7 = 287)
-    vec3 x = 2.0 * fract(p * C.www) - 1.0;
-    vec3 h = abs(x) - 0.5;
-    vec3 ox = floor(x + 0.5);
-    vec3 a0 = x - ox;
-    // Normalise gradients implicitly by scaling m
-    // Approximation of: m *= inversesqrt( a0*a0 + h*h );
-    m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
-    // Compute final noise value at P
-    vec3 g;
-    g.x = a0.x * x0.x + h.x * x0.y;
-    g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-    return 130.0 * dot(m, g);
-}
-    
-uniform float time;
-uniform sampler2D utexture;
-uniform sampler2D uxtexture;
-uniform vec3 u_LightColor;
-uniform vec3 u_DarkColor;
-uniform float u_Frequency;
-uniform float u_NoiseScale;
-uniform float u_RingScale;
-uniform float u_Contrast;
-varying vec2 vUv;
-varying vec3 vPosition;
-void main() {
-    float n = snoise(vUv * 0.01);
-    float lerp = pow(u_NoiseScale, u_RingScale) + n*time;
-    // te color = texture2D(uxtexture, vUv);
-    gl_FragColor = texture2D(utexture, vUv) * texture2D(uxtexture, vUv) ;
-}
-        `;
+        
         const material = new THREE.ShaderMaterial({
             uniforms: {
                 ...uniforms,
@@ -117,8 +29,8 @@ void main() {
                 color: { value: new THREE.Color('lightblue') },
                 utexture: { value: texture },
             },
-            vertexShader,
-            fragmentShader,
+            vertexShader:vertexShader,
+            fragmentShader: fragmentShader,
             side: THREE.DoubleSide,
         });
         materialRef.current = material;
@@ -148,60 +60,7 @@ void main() {
             }
         `;
         const fragmentShader = `
-// Description : Array and textureless GLSL 2D simplex noise function.
-//      Author : Ian McEwan, Ashima Arts.
-//  Maintainer : stegu
-//     Lastmod : 20110822 (ijm)
-//     License : Copyright (C) 2011 Ashima Arts. All rights reserved.
-//               Distributed under the MIT License. See LICENSE file.
-//               https://github.com/ashima/webgl-noise
-//               https://github.com/stegu/webgl-noise
-
-vec3 mod289(vec3 x) {
-    return x - floor(x * (1.0 / 289.0)) * 289.0;
-}
-    
-vec2 mod289(vec2 x) {
-    return x - floor(x * (1.0 / 289.0)) * 289.0;
-}
-
-vec3 permute(vec3 x) {
-    return mod289(((x * 34.0) + 10.0) * x);
-}
-
-float snoise(vec2 v) {
-    const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0
-                        0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)
-                       -0.577350269189626,  // -1.0 + 2.0 * C.x
-                        0.024390243902439); // 1.0 / 41.0
-    // First corner
-    vec2 i = floor(v + dot(v, C.yy));
-    vec2 x0 = v - i + dot(i, C.xx);
-    // Other corners
-    vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-    vec4 x12 = x0.xyxy + C.xxzz;
-    x12.xy -= i1;
-    // Permutations
-    i = mod289(i); // Avoid truncation effects in permutation
-    vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
-    vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
-    m = m * m;
-    m = m * m;
-    // Gradients: 41 points uniformly over a line, mapped onto a diamond.
-    // The ring size 17*17 = 289 is close to a multiple of 41 (41*7 = 287)
-    vec3 x = 2.0 * fract(p * C.www) - 1.0;
-    vec3 h = abs(x) - 0.5;
-    vec3 ox = floor(x + 0.5);
-    vec3 a0 = x - ox;
-    // Normalise gradients implicitly by scaling m
-    // Approximation of: m *= inversesqrt( a0*a0 + h*h );
-    m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
-    // Compute final noise value at P
-    vec3 g;
-    g.x = a0.x * x0.x + h.x * x0.y;
-    g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-    return 130.0 * dot(m, g);
-}
+${noiseWebglShader}
     
 uniform float time;
 uniform sampler2D utexture;
