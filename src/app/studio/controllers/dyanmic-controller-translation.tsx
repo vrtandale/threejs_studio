@@ -6,7 +6,7 @@ import { useStudioStore } from "../store/studio-store"
 
 const useController = () => {
   const { scene, camera, renderer } = useCanvasContext()
-  const { controllerMovement, recordingFrames, animationFrames, setAnimationFrames } = useStudioStore()
+  const { controllerMovement, recordingFrames, animationFrames, setAnimationFrames,setSelectedMesh } = useStudioStore()
   const controlsRef = React.useRef<TransformControls | null>(null)
   React.useEffect(() => {
     if (!camera || !renderer || !scene || !controllerMovement) return
@@ -32,7 +32,7 @@ const useController = () => {
   const attach = React.useCallback((object: THREE.Object3D) => {
     object.matrixAutoUpdate = true
     controlsRef.current?.attach(object)
-
+    setSelectedMesh(object)
     controlsRef.current?.addEventListener('objectChange', addEventListeners())
   }, [animationFrames, setAnimationFrames])
 

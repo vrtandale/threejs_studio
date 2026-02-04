@@ -12,6 +12,8 @@ import Sin from "./app/studio/maths/sin";
 import ScaleDistance from "./app/studio/maths/scale";
 import ShaderWaterSea from "./app/studio/maths/shade";
 import SeaShade from "./app/components/quick-helper/shader/shader";
+import Grass from "./app/studio/maths/grass";
+import ColliderObject from "./app/components/quick-helper/collission/collider";
 
 //threejs 3d enviorment studio
 // add a plane as default with x,y,z size that can be dyanmic
@@ -26,15 +28,15 @@ const App = () => {
     <div>
       <Sidebar/>
       <UtilityPanel/>
-      <ScaleDistance/>
+      {/* <ScaleDistance/> */}
         <Canvas >
-          <ShaderWaterSea/>
+          {/* <Grass/> */}
         <OrbitControls />
         {/* <PlaneGeometry/> */}
         {/* <BoxGeometry color="cyan" pos={new Vector3(2,2,2)}/> */}
         {/* <SeaShade/> */}
         {/* <CustomClipping/> */}
-        {/* <ColliderObject/> */}
+        <ColliderObject/>
 
       </Canvas>
 
