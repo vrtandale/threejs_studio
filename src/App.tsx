@@ -14,6 +14,9 @@ import ShaderWaterSea from "./app/studio/maths/shade";
 import SeaShade from "./app/components/quick-helper/shader/shader";
 import Grass from "./app/studio/maths/grass";
 import ColliderObject from "./app/components/quick-helper/collission/collider";
+import CustomClipping from "./app/components/quick-helper/custom-cliping/cliping";
+import ClippingTool from "./app/components/quick-helper/clipping/clipping";
+import ColliderGpu from "./app/components/quick-helper/collission/collider-gpu";
 
 //threejs 3d enviorment studio
 // add a plane as default with x,y,z size that can be dyanmic
@@ -36,7 +39,9 @@ const App = () => {
         {/* <BoxGeometry color="cyan" pos={new Vector3(2,2,2)}/> */}
         {/* <SeaShade/> */}
         {/* <CustomClipping/> */}
-        <ColliderObject/>
+        {/* <ColliderObject/> */}
+        {/* <ClippingTool/> */}
+        <ColliderGpu/>
 
       </Canvas>
 

@@ -1,9 +1,8 @@
+//@ts-nocheck
 import { useStudioStore } from "@/app/studio/store/studio-store"
 import { useCanvasContext } from "@/threejs/canvas-utils/canvas-provider"
-import BoxGeometry from "@/threejs/geometry/BoxGeometry"
 import * as THREE from "three"
 import React from "react"
-import { TransformControls } from "three/addons/controls/TransformControls.js"
 
 const ColliderObject = () => {
   const { scene, camera, renderer } = useCanvasContext()

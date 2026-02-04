@@ -52,7 +52,10 @@ const CustomClipping = () => {
 
                         void main() {
                             float d = dot(planeNormal, vWorldPos - planePoint);
-                            if (d < 0.0) discard;
+                            if (d < 0.0) {
+                                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                                return;
+                            }
                         `
                     );
 
