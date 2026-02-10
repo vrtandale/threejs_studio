@@ -7,7 +7,7 @@ const useSphere = () => {
     const { object3d, setObject3d } = useStudioStore()
     const addSphere = React.useCallback(() => {
         const geometry = new THREE.SphereGeometry(1, 100, 100)
-        const material = new THREE.MeshBasicMaterial({ color: 'red'})
+        const material = new THREE.MeshBasicMaterial({ color: 'red' ,wireframe:true})
         const sphere = new THREE.Mesh(geometry, material)
 
         sphere.position.set(0, 0, 0)

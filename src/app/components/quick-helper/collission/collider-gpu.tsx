@@ -167,7 +167,7 @@ function applyGradientBoxShader(
                     vWorldPos.y < boxMin.y || vWorldPos.y > boxMax.y ||
                     vWorldPos.z < boxMin.z || vWorldPos.z > boxMax.z
                 ) {
-                    gl_FragColor = vec4(1.0);
+                    return;
                 } else {
                     gl_FragColor = vec4(gradientColor, 1.0);
                 }
