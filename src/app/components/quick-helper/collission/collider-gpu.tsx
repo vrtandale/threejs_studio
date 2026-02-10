@@ -1,80 +1,52 @@
 import * as THREE from 'three'
-import { useCanvasContext } from '../../../../threejs/canvas-utils/canvas-provider';
-import React from 'react';
-import { useClippingStore } from '../clipping/clipping-store';
-import { useStudioStore } from '@/app/studio/store/studio-store';
+import React, { useEffect, useMemo, useRef } from 'react'
+import { useCanvasContext } from '../../../../threejs/canvas-utils/canvas-provider'
+import { useStudioStore } from '@/app/studio/store/studio-store'
 
 const ColliderGpu = () => {
-    const { scene, renderer, camera } = useCanvasContext()
+    const { scene, camera, renderer } = useCanvasContext()
     const { selectedMesh } = useStudioStore()
-    const rayCaster = new THREE.Raycaster()
 
-    React.useEffect(() => {
-        setInterval(() => {
+    const raycaster = useMemo(() => new THREE.Raycaster(), [])
+    const activeBoxHelper = useRef<THREE.Box3Helper | null>(null)
+
+    useEffect(() => {
+        if (!scene || !camera || !renderer || !selectedMesh) return
+
+        let rafId: number
+
+        const animate = () => {
             createColliderBox()
-        }, 100)
-    }, [selectedMesh])
-
-    const getFaceNormal = (intersect: THREE.Intersection): THREE.Vector3 => {
-        const mesh = intersect.object as THREE.Mesh
-        const geometry = mesh.geometry
-
-        if (!geometry) return new THREE.Vector3(0, 0, 1)
-
-        // Check if geometry has normals computed
-        if (!geometry.getAttribute('normal')) {
-            geometry.computeVertexNormals()
+            rafId = requestAnimationFrame(animate)
         }
 
-        const faceIndex = intersect.faceIndex
-        if (faceIndex === undefined) return new THREE.Vector3(0, 0, 1)
+        rafId = requestAnimationFrame(animate)
 
-        const normals = geometry.getAttribute('normal') as THREE.BufferAttribute
-        const indices = geometry.getIndex()
+        return () => {
+            cancelAnimationFrame(rafId)
 
-        // Get the indices of the face vertices
-        let a, b, c
-        if (indices) {
-            a = indices.getX(faceIndex * 3)
-            b = indices.getX(faceIndex * 3 + 1)
-            c = indices.getX(faceIndex * 3 + 2)
-        } else {
-            a = faceIndex * 3
-            b = faceIndex * 3 + 1
-            c = faceIndex * 3 + 2
+            if (activeBoxHelper.current) {
+                activeBoxHelper.current.parent?.remove(activeBoxHelper.current)
+                activeBoxHelper.current.geometry.dispose()
+                    ; (activeBoxHelper.current.material as THREE.Material).dispose()
+                activeBoxHelper.current = null
+            }
         }
+    }, [scene, camera, renderer, selectedMesh])
 
-        // Get normal vectors for all three vertices
-        const na = new THREE.Vector3(
-            normals.getX(a),
-            normals.getY(a),
-            normals.getZ(a)
-        )
-        const nb = new THREE.Vector3(
-            normals.getX(b),
-            normals.getY(b),
-            normals.getZ(b)
-        )
-        const nc = new THREE.Vector3(
-            normals.getX(c),
-            normals.getY(c),
-            normals.getZ(c)
-        )
-
-        // Average the three vertex normals
-        const faceNormal = new THREE.Vector3()
-        faceNormal.add(na).add(nb).add(nc).divideScalar(3)
-
-        // Transform to world space
-        faceNormal.transformDirection(mesh.matrixWorld)
-
-        return faceNormal.normalize()
-    }
 
     const createColliderBox = () => {
-        if (!scene || !camera || !renderer) return
-        if (!selectedMesh) return
-        const originPoint = selectedMesh.position.clone()
+        if (!scene || !selectedMesh) return
+
+        // 🔥 Remove previous helper
+        if (activeBoxHelper.current) {
+            activeBoxHelper.current.parent?.remove(activeBoxHelper.current)
+            activeBoxHelper.current.geometry.dispose()
+                ; (activeBoxHelper.current.material as THREE.Material).dispose()
+            activeBoxHelper.current = null
+        }
+
+        const origin = selectedMesh.position.clone()
         const directions = [
             new THREE.Vector3(1, 0, 0),
             new THREE.Vector3(-1, 0, 0),
@@ -83,117 +55,135 @@ const ColliderGpu = () => {
             new THREE.Vector3(0, 0, 1),
             new THREE.Vector3(0, 0, -1),
         ]
-        const rayLength = 1
-        directions.forEach(direction => {
-            rayCaster.set(originPoint, direction)
-            const intersects = rayCaster.intersectObjects(scene.children, true)
 
-            intersects.forEach(intersect => {
-                if (intersect.distance < rayLength && intersect.object !== selectedMesh && !intersect.object.userData.isGizmo) {
-                    const normal = getFaceNormal(intersect)
-                    console.log('Intersected object:', intersect.object.geometry)
-                    console.log('Face normal:', normal)
-                    const material = intersect.object.material;
-                    if (!material.userData._patched) {
-                        material.onBeforeCompile = (shader: any) => {
+        const minDistance = 0.1
 
-                            shader.uniforms.planeNormal = { value: normal };
-                            shader.uniforms.planePoint = { value: originPoint };
+        outer:
+        for (const dir of directions) {
+            raycaster.set(origin, dir.normalize())
+            const hits = raycaster.intersectObjects(scene.children, true)
 
-                            // Inject into vertex shader
-                            shader.vertexShader = shader.vertexShader.replace(
-                                "void main() {",
-                                `
-                        varying vec3 vWorldPos;
-                        void main() {
-                            vec4 worldPos = modelMatrix * vec4(position, 1.0);
-                            vWorldPos = worldPos.xyz;
-                        `
-                            );
+            for (const hit of hits) {
+                if (
+                    hit.object === selectedMesh ||
+                    hit.object.userData.isGizmo ||
+                    hit.distance < minDistance
+                ) continue
 
-                            // Inject into fragment shader
-                            shader.fragmentShader = shader.fragmentShader.replace(
-                                "void main() {",
-                                `
-                        varying vec3 vWorldPos;
-                        uniform vec3 planeNormal;
-                        uniform vec3 planePoint;
+                const box = new THREE.Box3().setFromObject(hit.object)
 
-                        void main() {
-                            float d = dot(planeNormal, vWorldPos - planePoint);
-                            if (d < 0.0) {
-                                gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
-                                return;
-                            }
-                        `
-                            );
+                // ✅ Create helper (only one)
+                const helper = new THREE.Box3Helper(box, 0xff00ff)
+                scene.add(helper)
+                activeBoxHelper.current = helper
 
-                            material.userData.shader = shader;
-                        };
+                // ✅ Apply / update shader
+                applyGradientBoxShader(
+                    selectedMesh as THREE.Mesh,
+                    box
+                )
 
-                        material.userData._patched = true;
-                        material.needsUpdate = true;
-                    }
-                }
-            })
-        })
+                break outer
+            }
+        }
     }
-    React.useEffect(() => {
-        renderer.localClippingEnabled = true;
 
-        // scene.traverse((obj:any) => {
-        //     if (!obj.isMesh) return;
+    return null
+}
 
-        //     const material = obj.material;
-        //     if (!material) return;
+export default ColliderGpu
 
-        //     // Store original shader
-        //     if (!material.userData._patched) {
-        //         material.onBeforeCompile = (shader:any) => {
+// --------------------------------------------------
+// SHADER PATCH (PATCH ONCE, UPDATE UNIFORMS)
+// --------------------------------------------------
 
-        //             shader.uniforms.planeNormal = { value: planeNormal };
-        //             shader.uniforms.planePoint  = { value: planePoint };
+function applyGradientBoxShader(
+    mesh: THREE.Mesh | null,
+    box: THREE.Box3
+) {
+    if (!mesh) return
 
-        //             // Inject into vertex shader
-        //             shader.vertexShader = shader.vertexShader.replace(
-        //                 "void main() {",
-        //                 `
-        //                 varying vec3 vWorldPos;
-        //                 void main() {
-        //                     vec4 worldPos = modelMatrix * vec4(position, 1.0);
-        //                     vWorldPos = worldPos.xyz;
-        //                 `
-        //             );
+    const material = mesh.material as THREE.MeshStandardMaterial & {
+        userData: any
+    }
 
-        //             // Inject into fragment shader
-        //             shader.fragmentShader = shader.fragmentShader.replace(
-        //                 "void main() {",
-        //                 `
-        //                 varying vec3 vWorldPos;
-        //                 uniform vec3 planeNormal;
-        //                 uniform vec3 planePoint;
+    // 🔒 Patch once
+    if (!material.userData._patched) {
+        material.userData._patched = true
+        material.onBeforeCompile = (shader) => {
+            shader.uniforms.boxMin = { value: box.min.clone() }
+            shader.uniforms.boxMax = { value: box.max.clone() }
 
-        //                 void main() {
-        //                     float d = dot(planeNormal, vWorldPos - planePoint);
-        //                     if (d < 0.0) {
-        //                         gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-        //                         return;
-        //                     }
-        //                 `
-        //             );
+            material.userData._shader = shader
 
-        //             material.userData.shader = shader;
-        //         };
+            // ---------- VERTEX ----------
+            shader.vertexShader = `
+                varying vec3 vWorldPos;
+            ` + shader.vertexShader
 
-        //         material.userData._patched = true;
-        //         material.needsUpdate = true;
-        //     }
-        // });
+            shader.vertexShader = shader.vertexShader.replace(
+                '#include <begin_vertex>',
+                `
+                #include <begin_vertex>
+                vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;
+                `
+            )
 
-    }, [scene, selectedMesh]);
+            // ---------- FRAGMENT ----------
+            shader.fragmentShader = `
+                varying vec3 vWorldPos;
+                uniform vec3 boxMin;
+                uniform vec3 boxMax;
+            ` + shader.fragmentShader
 
+            shader.fragmentShader = shader.fragmentShader.replace(
+                '#include <dithering_fragment>',
+                `
+                float t = clamp(
+                    (vWorldPos.y - boxMin.y) / (boxMax.y - boxMin.y),
+                    0.0,
+                    1.0
+                );
 
-    return null;
-};
+                vec3 c1 = vec3(1.0, 0.0, 0.0);
+                vec3 c2 = vec3(1.0, 0.5, 0.0);
+                vec3 c3 = vec3(1.0, 1.0, 0.0);
+                vec3 c4 = vec3(0.0, 1.0, 0.0);
+                vec3 c5 = vec3(0.0, 0.0, 1.0);
 
-export default ColliderGpu;
+                vec3 gradientColor;
+                if (t < 0.25) {
+                    gradientColor = mix(c5, c4, t / 0.25);
+                } else if (t < 0.5) {
+                    gradientColor = mix(c4, c3, (t - 0.25) / 0.25);
+                } else if (t < 0.75) {
+                    gradientColor = mix(c3, c2, (t - 0.5) / 0.25);
+                } else {
+                    gradientColor = mix(c2, c1, (t - 0.75) / 0.25);
+                }
+
+                if (
+                    vWorldPos.x < boxMin.x || vWorldPos.x > boxMax.x ||
+                    vWorldPos.y < boxMin.y || vWorldPos.y > boxMax.y ||
+                    vWorldPos.z < boxMin.z || vWorldPos.z > boxMax.z
+                ) {
+                    gl_FragColor = vec4(1.0);
+                } else {
+                    gl_FragColor = vec4(gradientColor, 1.0);
+                }
+
+                #include <dithering_fragment>
+                `
+            )
+        }
+
+        material.needsUpdate = true
+    }
+
+    // 🔁 Update uniforms every intersection
+    const shader = material.userData._shader
+    if (shader) {
+        shader.uniforms.boxMin.value.copy(box.min)
+        shader.uniforms.boxMax.value.copy(box.max)
+    }
+}

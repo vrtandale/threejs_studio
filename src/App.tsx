@@ -42,6 +42,7 @@ const App = () => {
         {/* <ColliderObject/> */}
         {/* <ClippingTool/> */}
         <ColliderGpu/>
+        {/* <ShaderWaterSea/> */}
 
       </Canvas>
 

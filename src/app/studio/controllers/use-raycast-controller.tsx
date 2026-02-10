@@ -43,7 +43,7 @@ export const useRayCasterController = ({customHandleClick}:{customHandleClick?: 
 }
 
 
-function getSelectableRoot(object: THREE.Object3D): THREE.Object3D {
+export function getSelectableRoot(object: THREE.Object3D): THREE.Object3D {
   let current: THREE.Object3D | null = object
 
   while (current?.parent) {

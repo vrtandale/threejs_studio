@@ -11,7 +11,7 @@ type MeshItem = {
 };
 
 const ModalEditor = () => {
-  const { object3d } = useStudioStore();
+  const { object3d,selectedMesh } = useStudioStore();
   const { camera, renderer, scene } = useCanvasContext()
   const [meshes, setMeshes] = useState<MeshItem[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -47,7 +47,7 @@ const ModalEditor = () => {
 
     })
     setMeshes(list);
-  }, [object3d]);
+  }, [object3d,]);
 
   /* ----------------------------------------
    * 2️⃣ Mouse click → Raycast → Select mesh
