@@ -6,8 +6,9 @@ const useSphere = () => {
     const { scene } = useCanvasContext()
     const { object3d, setObject3d } = useStudioStore()
     const addSphere = React.useCallback(() => {
-        const geometry = new THREE.SphereGeometry(1, 100, 100)
-        const material = new THREE.MeshBasicMaterial({ color: 'red' ,wireframe:true})
+        const geometry = new THREE.SphereGeometry(1, 10, 10)
+        randomColorMesh(geometry)
+        const material = new THREE.MeshBasicMaterial({ vertexColors: true,wireframe:true })
         const sphere = new THREE.Mesh(geometry, material)
 
         sphere.position.set(0, 0, 0)
@@ -20,3 +21,18 @@ const useSphere = () => {
 }
 
 export default useSphere
+export function randomColorMesh(geometry: any) {
+    var faces = geometry.getAttribute('position').count / 3,
+        colors = [];
+    for (var i = 0; i < faces; i++) {
+        var r = Math.random(),
+            g = Math.random(),
+            b = Math.random();
+        colors.push(r, g, b);
+        colors.push(r, g, b);
+        colors.push(r, g, b);
+    }
+
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+}

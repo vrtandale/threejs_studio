@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import React, { useEffect, useMemo, useRef } from 'react'
+import  { useEffect, useMemo, useRef } from 'react'
 import { useCanvasContext } from '../../../../threejs/canvas-utils/canvas-provider'
 import { useStudioStore } from '@/app/studio/store/studio-store'
 
@@ -69,6 +69,7 @@ const ColliderGpu = () => {
                     hit.object.userData.isGizmo ||
                     hit.distance < minDistance
                 ) continue
+                
 
                 const box = new THREE.Box3().setFromObject(hit.object)
 
@@ -187,3 +188,5 @@ function applyGradientBoxShader(
         shader.uniforms.boxMax.value.copy(box.max)
     }
 }
+
+

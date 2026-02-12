@@ -17,6 +17,7 @@ import ColliderObject from "./app/components/quick-helper/collission/collider";
 import CustomClipping from "./app/components/quick-helper/custom-cliping/cliping";
 import ClippingTool from "./app/components/quick-helper/clipping/clipping";
 import ColliderGpu from "./app/components/quick-helper/collission/collider-gpu";
+import ColliderGpuV2 from "./app/components/quick-helper/collission/collider-gpu-version2";
 
 //threejs 3d enviorment studio
 // add a plane as default with x,y,z size that can be dyanmic
@@ -41,7 +42,8 @@ const App = () => {
         {/* <CustomClipping/> */}
         {/* <ColliderObject/> */}
         {/* <ClippingTool/> */}
-        <ColliderGpu/>
+        {/* <ColliderGpu/> */}
+        <ColliderGpuV2/>
         {/* <ShaderWaterSea/> */}
 
       </Canvas>
