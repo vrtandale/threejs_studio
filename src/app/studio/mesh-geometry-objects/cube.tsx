@@ -7,7 +7,7 @@ const useCube = () => {
   const { object3d, setObject3d } = useStudioStore()
   const addCube = React.useCallback(() => {
     const geometry = new THREE.BoxGeometry(2, 2, 2, 10, 10 ,10)
-    const material = new THREE.MeshBasicMaterial({vertexColors:true,wireframe:true})
+    const material = new THREE.MeshBasicMaterial({color:'blue',wireframe:true})
     const cube = new THREE.Mesh(geometry, material)
 
     cube.position.set(0, 0, 0)
