@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import  { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, type RefObject } from 'react'
 import { useCanvasContext } from '../../../../threejs/canvas-utils/canvas-provider'
 import { useStudioStore } from '@/app/studio/store/studio-store'
 
@@ -8,11 +8,12 @@ const ColliderGpu = () => {
     const { selectedMesh } = useStudioStore()
 
     const raycaster = useMemo(() => new THREE.Raycaster(), [])
-    const activeBoxHelper = useRef<THREE.Box3Helper | null>(null)
+    const activeBoxHelper = useRef<any[] | null>(null)
 
     useEffect(() => {
         if (!scene || !camera || !renderer || !selectedMesh) return
 
+        activeBoxHelper.current = []
         let rafId: number
 
         const animate = () => {
@@ -26,10 +27,7 @@ const ColliderGpu = () => {
             cancelAnimationFrame(rafId)
 
             if (activeBoxHelper.current) {
-                activeBoxHelper.current.parent?.remove(activeBoxHelper.current)
-                activeBoxHelper.current.geometry.dispose()
-                    ; (activeBoxHelper.current.material as THREE.Material).dispose()
-                activeBoxHelper.current = null
+                removeLineRefs(activeBoxHelper)
             }
         }
     }, [scene, camera, renderer, selectedMesh])
@@ -40,10 +38,8 @@ const ColliderGpu = () => {
 
         // 🔥 Remove previous helper
         if (activeBoxHelper.current) {
-            activeBoxHelper.current.parent?.remove(activeBoxHelper.current)
-            activeBoxHelper.current.geometry.dispose()
-                ; (activeBoxHelper.current.material as THREE.Material).dispose()
-            activeBoxHelper.current = null
+            removeLineRefs(activeBoxHelper)
+            activeBoxHelper.current = []
         }
 
         const origin = selectedMesh.position.clone()
@@ -65,23 +61,28 @@ const ColliderGpu = () => {
 
             for (const hit of hits) {
                 if (
-                    hit.object === selectedMesh ||
                     hit.object.userData.isGizmo ||
                     hit.distance < minDistance
                 ) continue
-                
 
-                const box = new THREE.Box3().setFromObject(hit.object)
 
-                // ✅ Create helper (only one)
-                const helper = new THREE.Box3Helper(box, 0xff00ff)
-                scene.add(helper)
-                activeBoxHelper.current = helper
-
+                const minMax = getGeometryMinMaxPointsWorld(hit.object as THREE.Mesh)
+                const line = boundingLineObj(minMax)
+                scene.add(line)
+                activeBoxHelper.current?.push(line)
                 // ✅ Apply / update shader
                 applyGradientBoxShader(
                     selectedMesh as THREE.Mesh,
-                    box
+                    minMax
+                )
+
+                const selectedMinMax = getGeometryMinMaxPointsWorld(selectedMesh as THREE.Mesh)
+                const line2 = boundingLineObj(minMax)
+                scene.add(line2)
+                activeBoxHelper.current?.push(line2)
+                applyGradientBoxShader(
+                    hit.object as THREE.Mesh,
+                    selectedMinMax
                 )
 
                 break outer
@@ -94,13 +95,10 @@ const ColliderGpu = () => {
 
 export default ColliderGpu
 
-// --------------------------------------------------
-// SHADER PATCH (PATCH ONCE, UPDATE UNIFORMS)
-// --------------------------------------------------
 
 function applyGradientBoxShader(
     mesh: THREE.Mesh | null,
-    box: THREE.Box3
+    box: { min: THREE.Vector3, max: THREE.Vector3 }
 ) {
     if (!mesh) return
 
@@ -189,4 +187,95 @@ function applyGradientBoxShader(
     }
 }
 
+const geometryMinMaxCache = new Map<string, { min: THREE.Vector3; max: THREE.Vector3 }>()
 
+export function getGeometryMinMaxPointsWorld(mesh: THREE.Mesh) {
+    const geometry = mesh.geometry as THREE.BufferGeometry
+    const position = geometry.attributes.position
+
+    if (!position) {
+        throw new Error('Geometry has no position attribute.')
+    }
+
+    // Cache LOCAL bounds per geometry (NOT mesh)
+    const geoUUID = geometry.uuid
+
+    if (!geometryMinMaxCache.has(geoUUID)) {
+        const min = new THREE.Vector3(Infinity, Infinity, Infinity)
+        const max = new THREE.Vector3(-Infinity, -Infinity, -Infinity)
+        const vertex = new THREE.Vector3()
+
+        for (let i = 0; i < position.count; i++) {
+            vertex.set(
+                position.getX(i),
+                position.getY(i),
+                position.getZ(i)
+            )
+
+            min.min(vertex)
+            max.max(vertex)
+        }
+
+        geometryMinMaxCache.set(geoUUID, { min, max })
+    }
+
+    // Get cached LOCAL bounds
+    const cached = geometryMinMaxCache.get(geoUUID)!
+
+    // Update world matrix
+    mesh.updateWorldMatrix(true, false)
+
+    // IMPORTANT: clone before applying matrix
+    const worldMin = cached.min.clone().applyMatrix4(mesh.matrixWorld)
+    const worldMax = cached.max.clone().applyMatrix4(mesh.matrixWorld)
+
+    return { min: worldMin, max: worldMax }
+}
+
+
+export function boundingLineObj(minMax: { min: THREE.Vector3, max: THREE.Vector3 }) {
+    const points = [
+        minMax.min,
+        minMax.max,
+    ]
+
+    const geometry = new THREE.BufferGeometry().setFromPoints(points)
+    const material = new THREE.LineBasicMaterial({ color: 'orange' })
+    const line = new THREE.Line(geometry, material)
+    return line
+}
+
+
+export function removeLineRefs(
+    activeBoxHelper: RefObject<THREE.Object3D[] | null>
+) {
+    if (!activeBoxHelper.current) return
+
+    activeBoxHelper.current.forEach((obj) => {
+        if (!obj) return
+
+        // Remove from parent
+        if (obj.parent) {
+            obj.parent.remove(obj)
+        }
+
+        // Dispose geometry
+        const mesh = obj as THREE.Mesh
+        if (mesh.geometry) {
+            mesh.geometry.dispose()
+        }
+
+        // Dispose material(s)
+        if ((mesh as any).material) {
+            const material = (mesh as any).material
+
+            if (Array.isArray(material)) {
+                material.forEach((mat) => mat.dispose())
+            } else {
+                material.dispose()
+            }
+        }
+    })
+
+    activeBoxHelper.current = null
+}

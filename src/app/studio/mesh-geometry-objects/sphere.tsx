@@ -6,9 +6,9 @@ const useSphere = () => {
     const { scene } = useCanvasContext()
     const { object3d, setObject3d } = useStudioStore()
     const addSphere = React.useCallback(() => {
-        const geometry = new THREE.SphereGeometry(1, 10, 10)
-        randomColorMesh(geometry)
-        const material = new THREE.MeshBasicMaterial({ vertexColors: true,wireframe:true })
+        const geometry = new THREE.SphereGeometry(1, 40, 40)
+        // randomColorMesh(geometry)
+        const material = new THREE.MeshBasicMaterial({ color:'red',wireframe:true })
         const sphere = new THREE.Mesh(geometry, material)
 
         sphere.position.set(0, 0, 0)

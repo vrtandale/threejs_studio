@@ -42,8 +42,8 @@ const App = () => {
         {/* <CustomClipping/> */}
         {/* <ColliderObject/> */}
         {/* <ClippingTool/> */}
-        {/* <ColliderGpu/> */}
-        <ColliderGpuV2/>
+        <ColliderGpu/>
+        {/* <ColliderGpuV2/> */}
         {/* <ShaderWaterSea/> */}
 
       </Canvas>

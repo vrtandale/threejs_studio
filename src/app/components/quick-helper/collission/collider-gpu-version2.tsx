@@ -2,7 +2,6 @@ import { useStudioStore } from '@/app/studio/store/studio-store'
 import { useCanvasContext } from '@/threejs/canvas-utils/canvas-provider'
 import React, { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
-import { VertexNormalsHelper } from 'three/examples/jsm/Addons.js'
 
 const ColliderCPUv2 = () => {
     const { scene, camera, renderer } = useCanvasContext()
@@ -75,7 +74,7 @@ const ColliderCPUv2 = () => {
             // Offset ray origin slightly along normal to avoid self-intersection
             const rayOrigin = center.clone().add(normal.clone().multiplyScalar(0.001));
             raycaster.set(rayOrigin, normal);
-            raycaster.far = 5.0; // Maximum ray distance (default is Infinity)
+            raycaster.far = 2.0; // Maximum ray distance (default is Infinity)
             raycaster.near = 0.0; // Minimum ray distance (default is 0)
             const intersects = raycaster.intersectObjects(
                 scene.children.filter(obj => obj !== mesh && !obj.userData?.isGizmo),
