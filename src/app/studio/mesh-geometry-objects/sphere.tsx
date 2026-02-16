@@ -8,7 +8,7 @@ const useSphere = () => {
     const addSphere = React.useCallback(() => {
         const geometry = new THREE.SphereGeometry(1, 40, 40)
         // randomColorMesh(geometry)
-        const material = new THREE.MeshBasicMaterial({ color:'red',wireframe:true })
+        const material = new THREE.MeshBasicMaterial({ color:'white',wireframe:true })
         const sphere = new THREE.Mesh(geometry, material)
 
         sphere.position.set(0, 0, 0)

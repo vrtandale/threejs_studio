@@ -7,17 +7,7 @@ import OrbitControls from "./threejs/controls/orbit-controls";
 import useFirstPersonMovement from "./app/studio/camera-view/first-person";
 import Sidebar from "./app/components/sidebar";
 import useLights from "./app/studio/lights-studio/ambient-light";
-import EnviromentManager from "./app/studio/enviroment/enviroment";
-import Sin from "./app/studio/maths/sin";
-import ScaleDistance from "./app/studio/maths/scale";
-import ShaderWaterSea from "./app/studio/maths/shade";
-import SeaShade from "./app/components/quick-helper/shader/shader";
-import Grass from "./app/studio/maths/grass";
-import ColliderObject from "./app/components/quick-helper/collission/collider";
-import CustomClipping from "./app/components/quick-helper/custom-cliping/cliping";
-import ClippingTool from "./app/components/quick-helper/clipping/clipping";
-import ColliderGpu from "./app/components/quick-helper/collission/collider-gpu";
-import ColliderGpuV2 from "./app/components/quick-helper/collission/collider-gpu-version2";
+import ColliderGpuV2 from "./app/components/quick-helper/collission/collider-gpu-2";
 
 //threejs 3d enviorment studio
 // add a plane as default with x,y,z size that can be dyanmic
@@ -42,7 +32,7 @@ const App = () => {
         {/* <CustomClipping/> */}
         {/* <ColliderObject/> */}
         {/* <ClippingTool/> */}
-        <ColliderGpu/>
+        <ColliderGpuV2/>
         {/* <ColliderGpuV2/> */}
         {/* <ShaderWaterSea/> */}
 
