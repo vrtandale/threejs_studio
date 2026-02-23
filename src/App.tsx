@@ -8,6 +8,8 @@ import useFirstPersonMovement from "./app/studio/camera-view/first-person";
 import Sidebar from "./app/components/sidebar";
 import useLights from "./app/studio/lights-studio/ambient-light";
 import ColliderGpuV2 from "./app/components/quick-helper/collission/collider-gpu-2";
+import ColliderGpu from "./app/components/quick-helper/collission/collider-gpu";
+import Grass from "./app/studio/maths/grass";
 
 //threejs 3d enviorment studio
 // add a plane as default with x,y,z size that can be dyanmic
@@ -24,7 +26,7 @@ const App = () => {
       <UtilityPanel/>
       {/* <ScaleDistance/> */}
         <Canvas >
-          {/* <Grass/> */}
+          <Grass/>
         <OrbitControls />
         {/* <PlaneGeometry/> */}
         {/* <BoxGeometry color="cyan" pos={new Vector3(2,2,2)}/> */}
@@ -32,8 +34,8 @@ const App = () => {
         {/* <CustomClipping/> */}
         {/* <ColliderObject/> */}
         {/* <ClippingTool/> */}
-        <ColliderGpuV2/>
         {/* <ColliderGpuV2/> */}
+        {/* <ColliderGpu/> */}
         {/* <ShaderWaterSea/> */}
 
       </Canvas>

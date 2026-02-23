@@ -73,7 +73,7 @@ const ColliderGpuV2 = () => {
                     hit.point,
                     dir
                 )
-                const reverseDir = dir.clone().negate()
+                const reverseDir = dir.clone()
 
                 raycaster.set(hit.point.clone().addScaledVector(reverseDir, 0.01) // 🔥 small offset
 ,reverseDir)
